@@ -23,7 +23,7 @@ export default function EventsManager({ events }: { events: any[] }) {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-8">
+            <div className="flex justify-between items-center gap-4 mb-8">
                 <h1 className="text-h1 text-mssn-green-dark">Manage Events</h1>
             </div>
 

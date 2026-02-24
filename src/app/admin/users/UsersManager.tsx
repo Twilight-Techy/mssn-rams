@@ -23,7 +23,7 @@ export default function UsersManager({ initialUsers }: { initialUsers: any[] }) 
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-8">
+            <div className="flex justify-between items-center gap-4 mb-8">
                 <h1 className="text-h1 text-mssn-green-dark">User Management</h1>
                 <div className="relative w-300">
                     <Search size={18} className="absolute left-3 top-50 translate-y-50-rev text-secondary" />
@@ -68,11 +68,7 @@ export default function UsersManager({ initialUsers }: { initialUsers: any[] }) 
                                         value={user.role}
                                         onChange={(e) => handleRoleChange(user.id, e.target.value)}
                                         disabled={loadingMap[user.id]}
-                                        className={`py-1.5 px-3 rounded-lg border border-glass-border font-semibold text-sm ${user.role === 'super_admin' ? 'bg-red-100 text-red-800' :
-                                                user.role === 'admin' ? 'bg-yellow-100 text-yellow-800' :
-                                                    user.role === 'coordinator' ? 'bg-green-100 text-green-800' :
-                                                        'bg-white text-primary'
-                                            }`}
+                                        className="py-1.5 px-3 rounded-lg border border-gray font-medium text-sm bg-white text-primary outline-none focus:border-mssn-green"
                                     >
                                         <option value="user">USER</option>
                                         <option value="coordinator">COORDINATOR</option>

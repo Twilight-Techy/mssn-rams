@@ -24,7 +24,7 @@ export default function LiveFeed({ initialRecords }: { initialRecords: any[] }) 
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-8">
+            <div className="flex justify-between items-center gap-4 mb-8">
                 <h1 className="text-h1 text-mssn-green-dark">Live Attendance</h1>
                 <div className="relative w-300">
                     <Search size={18} className="absolute left-3 top-50 translate-y-50-rev text-secondary" />
