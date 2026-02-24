@@ -65,7 +65,7 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
 
                         <div>
                             <label>Matric Number</label>
-                            <input type="text" name="matricNumber" placeholder="e.g. 21/0000000" />
+                            <input type="text" name="matricNumber" placeholder="e.g. 210000000" />
                         </div>
 
                         <div className="flex gap-4">
@@ -82,7 +82,14 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
                             </div>
                             <div className="flex-1">
                                 <label>Department</label>
-                                <input type="text" name="department" placeholder="e.g. Computer Science" />
+                                <select name="department" required defaultValue={user?.department || ""} title="Select Department">
+                                    <option value="" disabled>Select Department</option>
+                                    <option value="Electronics and Computer Engineering">Electronics and Computer Engineering</option>
+                                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                    <option value="Aerospace Engineering">Aerospace Engineering</option>
+                                    <option value="Chemical and Polymer Engineering">Chemical and Polymer Engineering</option>
+                                    <option value="Others">Others</option>
+                                </select>
                             </div>
                         </div>
                     </>

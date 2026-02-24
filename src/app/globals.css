@@ -503,3 +503,59 @@ label {
 .border-transparent {
   border-color: transparent;
 }
+
+/* HTML5 QR Code Scanner Customization */
+#reader button {
+  background: linear-gradient(135deg, var(--mssn-green-light), var(--mssn-green));
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--glass-shadow);
+  margin: 5px;
+}
+
+#reader button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(22, 134, 72, 0.3);
+}
+
+#reader a {
+  color: var(--mssn-green);
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+#reader a:hover {
+  text-decoration: underline;
+}
+
+#reader select {
+  font-size: 0.9rem;
+  padding: 10px;
+  margin-bottom: 15px;
+  margin-top: 10px;
+}
+
+#reader input[type="file"] {
+  border: 1px dashed rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 8px;
+  width: 100%;
+  margin: 10px 0;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+#reader video {
+  border-radius: 12px;
+  margin-top: 15px;
+}

@@ -11,7 +11,7 @@ export const usersTable = pgTable("users", {
     matricNumber: text("matric_number"),
     level: text("level"),
     gender: text("gender", { enum: ["brother", "sister"] }),
-    department: text("department"),
+    department: text("department", { enum: ["Electronics and Computer Engineering", "Mechanical Engineering", "Aerospace Engineering", "Chemical and Polymer Engineering", "Others"] }),
     phoneNumber: text("phone_number"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
 });

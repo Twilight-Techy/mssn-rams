@@ -16,7 +16,7 @@ export async function updateUserProfile(formData: FormData) {
     const matricNumber = formData.get("matricNumber") as string;
     const level = formData.get("level") as string;
     const gender = formData.get("gender") as "brother" | "sister";
-    const department = formData.get("department") as string;
+    const department = formData.get("department") as "Electronics and Computer Engineering" | "Mechanical Engineering" | "Aerospace Engineering" | "Chemical and Polymer Engineering" | "Others" | null;
     const phoneNumber = formData.get("phoneNumber") as string;
 
     try {
