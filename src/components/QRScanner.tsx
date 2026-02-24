@@ -62,22 +62,22 @@ export default function QRScanner() {
     }, [router]);
 
     return (
-        <div style={{ textAlign: 'center' }}>
+        <div className="text-center">
             {loading ? (
-                <div style={{ padding: '3rem 1rem' }}>
-                    <div className="spinner" style={{ margin: '0 auto 1rem auto' }}></div>
-                    <p style={{ fontWeight: 500 }}>Processing attendance...</p>
+                <div className="py-12 px-4">
+                    <div className="spinner mx-auto mb-4"></div>
+                    <p className="font-medium">Processing attendance...</p>
                 </div>
             ) : (
                 <>
                     {error && (
-                        <div style={{ background: '#FEE2E2', color: '#B91C1C', padding: '1rem', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.9rem' }}>
+                        <div className="bg-red-100 text-red-800 p-4 rounded-lg mb-4 text-sm">
                             {error}
-                            <button onClick={() => window.location.reload()} style={{ display: 'block', marginTop: '10px', background: 'transparent', border: '1px solid #B91C1C', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer', color: '#B91C1C', width: '100%' }}>Try Again</button>
+                            <button onClick={() => window.location.reload()} className="block mt-2 bg-transparent border border-red-800 rounded px-2 py-1 cursor-pointer text-red-800 w-full">Try Again</button>
                         </div>
                     )}
-                    <div id="reader" style={{ width: '100%', maxWidth: '400px', margin: '0 auto', borderRadius: '12px', overflow: 'hidden', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}></div>
-                    <p style={{ marginTop: '1rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Point your camera at the event QR code</p>
+                    <div id="reader" className="w-full max-w-[400px] mx-auto rounded-xl overflow-hidden border-none shadow-[0_4px_20px_rgba(0,0,0,0.05)]"></div>
+                    <p className="mt-4 text-secondary text-sm">Point your camera at the event QR code</p>
                 </>
             )}
         </div>

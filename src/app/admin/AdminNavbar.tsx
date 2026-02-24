@@ -8,28 +8,29 @@ export default function AdminNavbar({ user }: { user: any }) {
     const isAdmin = user.role === "admin" || isSuperAdmin;
 
     return (
-        <nav style={{ background: 'white', borderBottom: '1px solid rgba(0,0,0,0.05)', padding: '1rem 0', position: 'sticky', top: 0, zIndex: 50 }}>
-            <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-                    <h2 style={{ fontSize: '1.2rem', margin: 0 }}>MSSN RAMS <span style={{ color: 'var(--mssn-green)' }}>Admin</span></h2>
+        <nav className="bg-white border-b py-4 sticky top-0 z-50">
+            <div className="container flex justify-between items-center">
+                <div className="flex items-center gap-8">
+                    <h2 className="text-lg m-0">MSSN RAMS <span className="text-mssn-green">Admin</span></h2>
 
-                    <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.95rem', fontWeight: 500 }}>
-                        <Link href="/admin" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Overview</Link>
-                        <Link href="/admin/attendance" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Live Attendance</Link>
+                    <div className="flex gap-6 font-medium text-sm">
+                        <Link href="/admin" className="text-secondary no-underline">Overview</Link>
+                        <Link href="/admin/attendance" className="text-secondary no-underline">Live Attendance</Link>
                         {isAdmin && (
-                            <Link href="/admin/events" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Events</Link>
+                            <Link href="/admin/events" className="text-secondary no-underline">Events</Link>
                         )}
                         {isSuperAdmin && (
-                            <Link href="/admin/users" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Users</Link>
+                            <Link href="/admin/users" className="text-secondary no-underline">Users</Link>
                         )}
                     </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', background: 'rgba(0,0,0,0.05)', padding: '4px 12px', borderRadius: '12px' }}>
+                <div className="flex items-center gap-4">
+                    <span className="badge badge-gray">
                         {user.role.replace('_', ' ').toUpperCase()}
                     </span>
                     <SignOutButton />
+
                 </div>
             </div>
         </nav>

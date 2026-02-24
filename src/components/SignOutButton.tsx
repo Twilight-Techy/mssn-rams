@@ -7,8 +7,7 @@ export default function SignOutButton() {
     return (
         <button
             onClick={() => signOut({ callbackUrl: '/' })}
-            className="btn-outline"
-            style={{ padding: '10px 16px', display: 'flex', gap: '8px', fontSize: '0.9rem' }}
+            className="btn-outline flex items-center justify-center gap-2 py-2 px-4 text-sm font-semibold"
         >
             <LogOut size={18} />
             Sign Out

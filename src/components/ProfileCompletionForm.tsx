@@ -19,33 +19,33 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
     }
 
     return (
-        <div className="glass-card" style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
-            <h2 style={{ marginBottom: '0.5rem' }}>Complete Your Profile</h2>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
+        <div className="glass-card p-8 max-w-[600px] mx-auto">
+            <h2 className="mb-2">Complete Your Profile</h2>
+            <p className="text-secondary mb-8">
                 Please provide a few more details to set up your RAMS account.
             </p>
 
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
 
                 {/* Category Toggle */}
                 <div>
                     <label>Category</label>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
-                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                    <div className="flex gap-4 mt-2">
+                        <label className="flex items-center gap-2 cursor-pointer">
                             <input
                                 type="radio"
                                 checked={category === 'student'}
                                 onChange={() => setCategory('student')}
-                                style={{ width: 'auto' }}
+                                className="w-auto"
                             />
                             Student
                         </label>
-                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                        <label className="flex items-center gap-2 cursor-pointer">
                             <input
                                 type="radio"
                                 checked={category === 'others'}
                                 onChange={() => setCategory('others')}
-                                style={{ width: 'auto' }}
+                                className="w-auto"
                             />
                             Others (Staff/Guest)
                         </label>
@@ -68,8 +68,8 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
                             <input type="text" name="matricNumber" placeholder="e.g. 21/0000000" />
                         </div>
 
-                        <div style={{ display: 'flex', gap: '1rem' }}>
-                            <div style={{ flex: 1 }}>
+                        <div className="flex gap-4">
+                            <div className="flex-1">
                                 <label>Level</label>
                                 <select name="level" required title="Select Level">
                                     <option value="">Select Level</option>
@@ -80,7 +80,7 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
                                     <option value="500">500 Level</option>
                                 </select>
                             </div>
-                            <div style={{ flex: 1 }}>
+                            <div className="flex-1">
                                 <label>Department</label>
                                 <input type="text" name="department" placeholder="e.g. Computer Science" />
                             </div>
@@ -89,8 +89,8 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
                 )}
 
                 {/* Common Fields */}
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                    <div style={{ flex: 1 }}>
+                <div className="flex gap-4">
+                    <div className="flex-1">
                         <label>Gender</label>
                         <select name="gender" required defaultValue={user?.gender || ""} title="Select Gender">
                             <option value="" disabled>Select Gender</option>
@@ -98,7 +98,7 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
                             <option value="sister">Sister (Female)</option>
                         </select>
                     </div>
-                    <div style={{ flex: 1 }}>
+                    <div className="flex-1">
                         <label>Phone Number</label>
                         <input type="tel" name="phoneNumber" placeholder="08000000000" required defaultValue={user?.phoneNumber || ""} />
                     </div>

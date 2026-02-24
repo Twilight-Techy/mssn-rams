@@ -14,9 +14,9 @@ export default async function AdminLayout({
     }
 
     return (
-        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <div className="min-h-screen flex flex-col">
             <AdminNavbar user={user} />
-            <main style={{ flex: 1, padding: '2rem' }} className="container">
+            <main className="flex-1 p-8 container">
                 {children}
             </main>
         </div>

@@ -23,57 +23,56 @@ export default function UsersManager({ initialUsers }: { initialUsers: any[] }) 
 
     return (
         <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                <h1 style={{ fontSize: '1.8rem', color: 'var(--mssn-green-dark)' }}>User Management</h1>
-                <div style={{ position: 'relative', width: '300px' }}>
-                    <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
+            <div className="flex justify-between items-center mb-8">
+                <h1 className="text-h1 text-mssn-green-dark">User Management</h1>
+                <div className="relative w-300">
+                    <Search size={18} className="absolute left-3 top-50 translate-y-50-rev text-secondary" />
                     <input
                         type="text"
                         title="Search Users"
                         placeholder="Search users..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        style={{ paddingLeft: '40px' }}
+                        className="pl-10"
                     />
                 </div>
             </div>
 
-            <div className="glass-card" style={{ padding: 0, overflow: 'hidden' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <div className="glass-card p-0 overflow-hidden">
+                <table className="admin-table">
                     <thead>
-                        <tr style={{ background: 'rgba(0,0,0,0.03)', borderBottom: '1px solid var(--glass-border)' }}>
-                            <th style={{ padding: '16px' }}>Name</th>
-                            <th style={{ padding: '16px' }}>Email</th>
-                            <th style={{ padding: '16px' }}>Matric/Level</th>
-                            <th style={{ padding: '16px', textAlign: 'right' }}>Role</th>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Matric/Level</th>
+                            <th className="text-right">Role</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filteredUsers.length === 0 ? (
-                            <tr><td colSpan={4} style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-secondary)' }}>No users found.</td></tr>
+                            <tr><td colSpan={4} className="p-12 text-center text-secondary">No users found.</td></tr>
                         ) : filteredUsers.map(user => (
-                            <tr key={user.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
-                                <td style={{ padding: '16px', fontWeight: 500 }}>{user.firstName} {user.lastName} <br /><span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{user.category}</span></td>
-                                <td style={{ padding: '16px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{user.email}</td>
-                                <td style={{ padding: '16px' }}>
-                                    <div style={{ fontSize: '0.9rem' }}>{user.matricNumber || 'N/A'}</div>
-                                    <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{user.level ? `${user.level}L` : ''}</div>
+                            <tr key={user.id}>
+                                <td className="font-medium">
+                                    {user.firstName} {user.lastName} <br />
+                                    <span className="text-xs text-secondary">{user.category}</span>
                                 </td>
-                                <td style={{ padding: '16px', textAlign: 'right' }}>
+                                <td className="text-secondary text-sm">{user.email}</td>
+                                <td>
+                                    <div className="text-sm">{user.matricNumber || 'N/A'}</div>
+                                    <div className="text-xs text-secondary">{user.level ? `${user.level}L` : ''}</div>
+                                </td>
+                                <td className="text-right">
                                     <select
                                         title={`Change role for ${user.firstName}`}
                                         value={user.role}
                                         onChange={(e) => handleRoleChange(user.id, e.target.value)}
                                         disabled={loadingMap[user.id]}
-                                        style={{
-                                            padding: '6px 12px',
-                                            borderRadius: '8px',
-                                            border: '1px solid var(--glass-border)',
-                                            background: user.role === 'super_admin' ? '#FEE2E2' : user.role === 'admin' ? '#FEF4C6' : user.role === 'coordinator' ? '#C6F6D5' : 'white',
-                                            color: user.role === 'super_admin' ? '#9B2C2C' : user.role === 'admin' ? '#975A16' : user.role === 'coordinator' ? '#22543D' : 'inherit',
-                                            fontWeight: 600,
-                                            fontSize: '0.85rem'
-                                        }}
+                                        className={`py-1.5 px-3 rounded-lg border border-glass-border font-semibold text-sm ${user.role === 'super_admin' ? 'bg-red-100 text-red-800' :
+                                                user.role === 'admin' ? 'bg-yellow-100 text-yellow-800' :
+                                                    user.role === 'coordinator' ? 'bg-green-100 text-green-800' :
+                                                        'bg-white text-primary'
+                                            }`}
                                     >
                                         <option value="user">USER</option>
                                         <option value="coordinator">COORDINATOR</option>

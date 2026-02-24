@@ -9,14 +9,14 @@ export default async function TicketPage() {
 
     if (!ticket) {
         return (
-            <div className="container" style={{ paddingTop: '4rem', textAlign: 'center' }}>
-                <div className="glass-card" style={{ padding: '3rem', maxWidth: '500px', margin: '0 auto' }}>
-                    <h2 style={{ marginBottom: '1rem' }}>No Active Ticket Found</h2>
-                    <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
+            <div className="container pt-16 text-center">
+                <div className="glass-card p-12 max-w-[500px] mx-auto">
+                    <h2 className="mb-4">No Active Ticket Found</h2>
+                    <p className="text-secondary mb-8">
                         You haven't marked attendance for the current event, or there is no active event right now.
                     </p>
-                    <Link href="/dashboard" className="btn-primary">
-                        <ArrowLeft size={18} style={{ marginRight: '8px' }} /> Return to Dashboard
+                    <Link href="/dashboard" className="btn-primary flex items-center justify-center gap-2">
+                        <ArrowLeft size={18} /> Return to Dashboard
                     </Link>
                 </div>
             </div>
@@ -24,10 +24,10 @@ export default async function TicketPage() {
     }
 
     return (
-        <div className="container" style={{ paddingBottom: '2rem' }}>
-            <div style={{ paddingTop: '2rem' }}>
-                <Link href="/dashboard" style={{ display: 'inline-flex', alignItems: 'center', color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 500 }}>
-                    <ArrowLeft size={18} style={{ marginRight: '6px' }} /> Dashboard
+        <div className="container pb-8">
+            <div className="pt-8">
+                <Link href="/dashboard" className="inline-flex items-center text-secondary no-underline font-medium gap-2">
+                    <ArrowLeft size={18} /> Dashboard
                 </Link>
             </div>
             <DigitalTicket ticket={ticket!} />

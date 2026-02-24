@@ -16,33 +16,27 @@ export default async function DashboardPage() {
     // Enforce profile completion before accessing dashboard
     if (!user.phoneNumber || !user.gender || !user.category) {
         return (
-            <div className="container" style={{ paddingTop: '4rem' }}>
+            <div className="container pt-16">
                 <ProfileCompletionForm user={user} />
             </div>
         );
     }
 
     return (
-        <div className="container" style={{ paddingTop: '2rem' }}>
-            <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+        <div className="container pt-8">
+            <header className="flex justify-between items-center mb-12">
                 <div>
-                    <h1 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>Assalamu Alaikum, {user.firstName}</h1>
-                    <p style={{ color: 'var(--text-secondary)' }}>Welcome to the MSSN RAMS Dashboard</p>
+                    <h1 className="text-h2 mb-1">Assalamu Alaikum, {user.firstName}</h1>
+                    <p className="text-secondary">Welcome to the MSSN RAMS Dashboard</p>
                 </div>
 
                 <SignOutButton />
             </header>
 
-            <main style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+            <main className="grid grid-cols-overview gap-8">
                 {/* Attendance Action Card */}
-                <div className="glass-card" style={{ padding: '2rem', textAlign: 'center' }}>
-                    <div style={{
-                        background: 'rgba(56, 161, 105, 0.1)',
-                        height: '80px', width: '80px',
-                        borderRadius: '50%',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        margin: '0 auto 1.5rem auto'
-                    }}>
+                <div className="glass-card p-8 text-center">
+                    <div className="mx-auto flex justify-center items-center w-20 h-20 rounded-full mb-6 bg-success-light">
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--mssn-green)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
                             <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
@@ -52,21 +46,15 @@ export default async function DashboardPage() {
                         </svg>
                     </div>
                     <h3>Mark Attendance</h3>
-                    <p style={{ color: 'var(--text-secondary)', margin: '1rem 0 2rem 0', fontSize: '0.95rem' }}>
+                    <p className="text-secondary my-4 mb-8 text-sm">
                         Ready for Iftar? Scan the QR code at the venue or use the scanner below to get your digital ticket.
                     </p>
                     <QRScanner />
                 </div>
 
                 {/* View Ticket Card */}
-                <div className="glass-card" style={{ padding: '2rem', textAlign: 'center', display: 'flex', flexDirection: 'column' }}>
-                    <div style={{
-                        background: 'rgba(11, 81, 42, 0.1)',
-                        height: '80px', width: '80px',
-                        borderRadius: '50%',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        margin: '0 auto 1.5rem auto'
-                    }}>
+                <div className="glass-card p-8 text-center flex flex-col">
+                    <div className="mx-auto flex justify-center items-center w-20 h-20 rounded-full mb-6 bg-mssn-green-10">
                         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--mssn-green)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M4 7V4h16v3"></path>
                             <path d="M4 17v3h16v-3"></path>
@@ -78,10 +66,10 @@ export default async function DashboardPage() {
                         </svg>
                     </div>
                     <h3>My Iftar Ticket</h3>
-                    <p style={{ color: 'var(--text-secondary)', margin: '1rem 0 2rem 0', fontSize: '0.95rem', flex: 1 }}>
+                    <p className="text-secondary my-4 mb-8 text-sm flex-1">
                         View your active ticket for today's event to show the coordinators.
                     </p>
-                    <Link href="/ticket" className="btn-outline w-full" style={{ display: 'block', textDecoration: 'none' }}>View Ticket</Link>
+                    <Link href="/ticket" className="btn-outline w-full block no-underline">View Ticket</Link>
                 </div>
 
             </main>
