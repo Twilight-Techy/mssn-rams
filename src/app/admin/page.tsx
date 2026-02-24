@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { attendanceTable, eventsTable, usersTable } from "@/db/schema";
 import { eq, count, and } from "drizzle-orm";
 import Link from "next/link";
+import QRCode from "react-qr-code";
 
 export default async function AdminOverview() {
     // Basic stats
@@ -79,6 +80,25 @@ export default async function AdminOverview() {
                         <Link href="/admin/attendance" className="btn-primary no-underline">Go to Live Feed</Link>
                         <Link href="/admin/events" className="btn-outline no-underline text-center">Manage Events</Link>
                     </div>
+                </div>
+
+                <div className="glass-card p-8 flex flex-col items-center justify-center text-center">
+                    <h3 className="mb-4">Active Event QR Code</h3>
+                    {activeEvent.length > 0 ? (
+                        <>
+                            <div className="bg-white p-4 rounded-xl shadow-sm inline-block mb-4">
+                                <QRCode value={activeEvent[0].id} size={180} level="H" />
+                            </div>
+                            <p className="text-sm text-secondary">
+                                Display this code at the venue for students to scan.
+                            </p>
+                        </>
+                    ) : (
+                        <div className="text-secondary p-8 bg-black-05 rounded-xl border border-dashed border-glass-border w-full">
+                            <p>No active event.</p>
+                            <Link href="/admin/events" className="text-mssn-green font-medium mt-2 inline-block">Create or activate one</Link>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
