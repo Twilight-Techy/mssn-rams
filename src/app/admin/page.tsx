@@ -5,8 +5,15 @@ import { attendanceTable, eventsTable, usersTable } from "@/db/schema";
 import { eq, count, and } from "drizzle-orm";
 import Link from "next/link";
 import DynamicQRCode from "@/components/DynamicQRCode";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
 
 export default async function AdminOverview() {
+    // Get user role
+    const session = await getServerSession(authOptions);
+    const userRole = (session?.user as { role?: string })?.role || 'user';
+    const isAdminOrAbove = userRole === 'admin' || userRole === 'super_admin';
+
     // Basic stats
     const totalUsers = await db.select({ count: count() }).from(usersTable);
 
@@ -78,7 +85,9 @@ export default async function AdminOverview() {
                     <h3>Quick Actions</h3>
                     <div className="flex flex-col gap-4 mt-6">
                         <Link href="/admin/attendance" className="btn-primary no-underline">Go to Live Feed</Link>
-                        <Link href="/admin/events" className="btn-outline no-underline text-center">Manage Events</Link>
+                        {isAdminOrAbove && (
+                            <Link href="/admin/events" className="btn-outline no-underline text-center">Manage Events</Link>
+                        )}
                     </div>
                 </div>
 
