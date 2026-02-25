@@ -5,7 +5,7 @@ import { updateUserProfile } from '@/app/actions/updateUser';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function ProfileCompletionForm({ user }: { user: any }) {
-    const [category, setCategory] = useState(user?.category || 'student');
+    const [userType, setUserType] = useState<'muslim_student' | 'others'>('muslim_student');
     const [loading, setLoading] = useState(false);
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -13,7 +13,15 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
         setLoading(true);
 
         const formData = new FormData(e.currentTarget);
-        formData.append('category', category);
+
+        // Auto-map userType to the DB fields
+        if (userType === 'muslim_student') {
+            formData.append('category', 'student');
+            formData.append('isMuslim', 'true');
+        } else {
+            formData.append('category', 'others');
+            formData.append('isMuslim', 'false');
+        }
 
         await updateUserProfile(formData);
         setLoading(false);
@@ -28,42 +36,34 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-6">
 
-                {/* Category Toggle */}
+                {/* Simplified Category Toggle */}
                 <div>
-                    <label>Category</label>
+                    <label>I am a...</label>
                     <div className="flex gap-4 mt-2">
                         <label className="flex items-center gap-2 cursor-pointer">
                             <input
                                 type="radio"
-                                checked={category === 'student'}
-                                onChange={() => setCategory('student')}
+                                checked={userType === 'muslim_student'}
+                                onChange={() => setUserType('muslim_student')}
                                 className="w-auto"
                             />
-                            Student
+                            Muslim Student
                         </label>
                         <label className="flex items-center gap-2 cursor-pointer">
                             <input
                                 type="radio"
-                                checked={category === 'others'}
-                                onChange={() => setCategory('others')}
+                                checked={userType === 'others'}
+                                onChange={() => setUserType('others')}
                                 className="w-auto"
                             />
-                            Others (Staff/Guest)
+                            Others (Staff, Guest, Non-Muslim)
                         </label>
                     </div>
                 </div>
 
-                {/* Conditional Fields based on Student */}
-                {category === 'student' && (
+                {/* Extra fields only for Muslim Students */}
+                {userType === 'muslim_student' && (
                     <>
-                        <div>
-                            <label>Are you a Muslim Student?</label>
-                            <select name="isMuslim" required defaultValue="true" title="Are you a Muslim?">
-                                <option value="true">Yes, I am</option>
-                                <option value="false">No, I am not</option>
-                            </select>
-                        </div>
-
                         <div>
                             <label>Matric Number</label>
                             <input type="text" name="matricNumber" placeholder="e.g. 210000000" />
