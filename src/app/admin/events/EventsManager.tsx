@@ -60,14 +60,14 @@ export default function EventsManager({ events }: { events: { id: string, title:
                                 <tr><td colSpan={4} className="p-8 text-center text-secondary">No events created yet.</td></tr>
                             ) : events.map(event => (
                                 <tr key={event.id}>
-                                    <td className="font-medium">{event.title}</td>
-                                    <td className="text-secondary">{new Date(event.date).toLocaleDateString()}</td>
-                                    <td>
+                                    <td data-label="Title" className="font-medium">{event.title}</td>
+                                    <td data-label="Date" className="text-secondary">{new Date(event.date).toLocaleDateString()}</td>
+                                    <td data-label="Status">
                                         <span className={`badge ${event.isActive ? 'badge-green' : 'badge-gray'}`}>
                                             {event.isActive ? 'ACTIVE NOW' : 'INACTIVE'}
                                         </span>
                                     </td>
-                                    <td className="text-right">
+                                    <td data-label="" className="text-right">
                                         <label title="Toggle Event Status" className="toggle-switch">
                                             <input
                                                 type="checkbox"

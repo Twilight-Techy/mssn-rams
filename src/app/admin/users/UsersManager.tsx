@@ -53,16 +53,16 @@ export default function UsersManager({ initialUsers }: { initialUsers: { id: str
                             <tr><td colSpan={4} className="p-12 text-center text-secondary">No users found.</td></tr>
                         ) : filteredUsers.map(user => (
                             <tr key={user.id}>
-                                <td className="font-medium">
+                                <td data-label="Name" className="font-medium">
                                     {user.firstName} {user.lastName} <br />
                                     <span className="text-xs text-secondary">{user.category ? user.category.charAt(0).toUpperCase() + user.category.slice(1) : ''}</span>
                                 </td>
-                                <td className="text-secondary text-sm">{user.email}</td>
-                                <td>
+                                <td data-label="Email" className="text-secondary text-sm">{user.email}</td>
+                                <td data-label="Matric/Level">
                                     <div className="text-sm">{user.matricNumber || 'N/A'}</div>
                                     <div className="text-xs text-secondary">{user.level ? `${user.level}L` : ''}</div>
                                 </td>
-                                <td className="text-right">
+                                <td data-label="" className="text-right">
                                     <select
                                         title={`Change role for ${user.firstName}`}
                                         value={user.role}

@@ -97,7 +97,7 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
         <div>
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8">
                 <h1 className="text-h1 text-mssn-green-dark">Live Attendance</h1>
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-4 admin-filters">
                     <button
                         onClick={() => setIsModalOpen(true)}
                         className="btn-outline border-mssn-green text-mssn-green py-2 px-4 whitespace-nowrap flex items-center gap-2"
@@ -155,18 +155,18 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
                             <tr><td colSpan={4} className="p-8 text-center text-secondary">No attendees found.</td></tr>
                         ) : filteredRecords.map(record => (
                             <tr key={record.id} className={record.status === 'served' ? 'bg-black-02' : 'bg-transparent'}>
-                                <td>
+                                <td data-label="Attendee">
                                     <div className="font-semibold">{record.user.firstName} {record.user.lastName}</div>
                                     <div className="text-sm text-secondary">{record.user.gender ? record.user.gender.charAt(0).toUpperCase() + record.user.gender.slice(1) : ''}</div>
                                 </td>
-                                <td>
+                                <td data-label="Matric & Level">
                                     <div>{record.user.matricNumber || 'N/A'}</div>
                                     <div className="text-sm text-secondary">{record.user.level}L</div>
                                 </td>
-                                <td className="text-secondary text-sm">
+                                <td data-label="Check-in" className="text-secondary text-sm">
                                     {new Date(record.checkInTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                 </td>
-                                <td className="text-right">
+                                <td data-label="" className="text-right">
                                     {record.status === 'marked' ? (
                                         <button
                                             onClick={() => handleToggle(record.id, record.status as 'marked' | 'served')}
