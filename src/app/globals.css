@@ -1046,16 +1046,22 @@ label {
     gap: 1rem;
     align-items: flex-start;
     margin-bottom: 2rem;
+    padding-top: 0.5rem;
+  }
+
+  .dashboard-header>*:last-child {
+    align-self: flex-end;
   }
 }
 
 /* Ticket Page - vertically center */
 .ticket-page {
-  min-height: 100vh;
+  min-height: calc(100vh - 80px);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-bottom: 2rem;
+  align-items: center;
+  width: 100%;
 }
 
 /* Modal Overlay */
