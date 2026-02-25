@@ -38,7 +38,7 @@ export default async function DashboardPage() {
             <Suspense fallback={null}>
                 <DeepLinkScanner />
             </Suspense>
-            <header className="flex justify-between items-center mb-12">
+            <header className="flex justify-between items-center mb-12 dashboard-header">
                 <div className="flex items-center gap-4">
                     <Image src="/logo.png" alt="MSSN Logo" width={52} height={52} className="rounded-full bg-white shadow-sm p-1" />
                     <div>

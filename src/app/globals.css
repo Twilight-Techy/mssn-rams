@@ -1039,6 +1039,23 @@ label {
   .admin-filters .relative {
     width: 100%;
   }
+
+  /* Dashboard header - stack on mobile */
+  .dashboard-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+  }
+}
+
+/* Ticket Page - vertically center */
+.ticket-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 2rem;
 }
 
 /* Modal Overlay */
