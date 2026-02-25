@@ -32,9 +32,26 @@ export default function QRScanner() {
             setError(null);
 
             try {
-                // The QR code should contain the raw eventId for now (e.g. "uuid-string")
-                // We can add dynamic token validation to this action later
-                const result = await markAttendance(decodedText);
+                // The QR code now contains a deep-link URL like:
+                // https://domain.com/dashboard?scan=BASE64_PAYLOAD
+                // We need to extract and decode the base64 payload before sending to the server action.
+                let payload = decodedText;
+                try {
+                    const url = new URL(decodedText);
+                    const scanParam = url.searchParams.get('scan');
+                    if (scanParam) {
+                        payload = atob(scanParam);
+                    }
+                } catch {
+                    // If it's not a URL, try decoding as raw base64 or pass through
+                    try {
+                        payload = atob(decodedText);
+                    } catch {
+                        // pass through as-is
+                    }
+                }
+
+                const result = await markAttendance(payload);
 
                 if (result.error) {
                     setError(result.error);

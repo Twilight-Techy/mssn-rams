@@ -25,8 +25,9 @@ export async function markAttendance(eventId: string) {
     try {
         const data = JSON.parse(eventId);
         if (data.eventId && data.exp) {
-            // Check if the QR code was generated more than 30 seconds ago (plus a small buffer)
-            if (Date.now() > data.exp) {
+            // Check if the QR code has expired (with a 15s buffer for clock skew between browser and server)
+            const CLOCK_BUFFER_MS = 15000;
+            if (Date.now() > data.exp + CLOCK_BUFFER_MS) {
                 return { error: "This QR code has expired. Please scan the live screen again." };
             }
             parsedEventId = data.eventId;
