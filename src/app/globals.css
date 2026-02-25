@@ -1049,8 +1049,9 @@ label {
     padding-top: 0.5rem;
   }
 
-  .dashboard-header>*:last-child {
-    align-self: flex-end;
+  .dashboard-actions {
+    width: 100%;
+    justify-content: space-between;
   }
 }
 

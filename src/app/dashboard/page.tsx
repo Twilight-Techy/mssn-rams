@@ -47,9 +47,9 @@ export default async function DashboardPage() {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 dashboard-actions">
                     <span className="badge badge-green">
-                        {user.role === 'super_admin' ? 'SUPER ADMIN' : user.role.toUpperCase()}
+                        {user.isMuslim && user.category === 'student' ? 'Muslim Student' : user.category === 'others' ? 'Others' : 'Student'}
                     </span>
                     <SignOutButton />
                 </div>
