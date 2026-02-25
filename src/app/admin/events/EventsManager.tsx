@@ -45,7 +45,7 @@ export default function EventsManager({ events }: { events: { id: string, title:
                 </div>
 
                 {/* List Events Card */}
-                <div className="glass-card p-0 overflow-hidden">
+                <div className="glass-card p-0 overflow-hidden table-responsive">
                     <table className="admin-table">
                         <thead>
                             <tr>

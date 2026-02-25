@@ -23,7 +23,7 @@ export default function UsersManager({ initialUsers }: { initialUsers: { id: str
 
     return (
         <div>
-            <div className="flex justify-between items-center gap-4 mb-8">
+            <div className="flex justify-between items-center gap-4 mb-8 admin-header">
                 <h1 className="text-h1 text-mssn-green-dark">User Management</h1>
                 <div className="relative w-300">
                     <Search size={18} className="absolute left-3 top-50 translate-y-50-rev text-secondary" />
@@ -38,7 +38,7 @@ export default function UsersManager({ initialUsers }: { initialUsers: { id: str
                 </div>
             </div>
 
-            <div className="glass-card p-0 overflow-hidden">
+            <div className="glass-card p-0 overflow-hidden table-responsive">
                 <table className="admin-table">
                     <thead>
                         <tr>

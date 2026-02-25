@@ -140,7 +140,7 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
                 </div>
             </div>
 
-            <div className="glass-card p-0 overflow-hidden">
+            <div className="glass-card p-0 overflow-hidden table-responsive">
                 <table className="admin-table">
                     <thead>
                         <tr>
