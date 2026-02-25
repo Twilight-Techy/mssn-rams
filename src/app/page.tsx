@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import LoginButton from "@/components/LoginButton";
 import styles from './page.module.css';
 
@@ -28,7 +29,9 @@ export default async function Home() {
           Ramadan Attendance Management System
         </p>
 
-        <LoginButton />
+        <Suspense fallback={<div className="h-[56px] w-full bg-black-05 rounded-xl animate-pulse"></div>}>
+          <LoginButton />
+        </Suspense>
 
         <p className={styles.footerText}>
           &copy; {new Date().getFullYear()} Muslim Students' Society of Nigeria <br /> LASU Epe Branch

@@ -2,9 +2,12 @@ import { getUserProfile } from "@/app/actions/getUser";
 import ProfileCompletionForm from "@/components/ProfileCompletionForm";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { LogOut } from "lucide-react";
 import SignOutButton from "@/components/SignOutButton";
 import QRScanner from "@/components/QRScanner";
+import DeepLinkScanner from "@/components/DeepLinkScanner";
+import { Suspense } from "react";
 
 export default async function DashboardPage() {
     const user = await getUserProfile();
@@ -24,10 +27,16 @@ export default async function DashboardPage() {
 
     return (
         <div className="container pt-8">
+            <Suspense fallback={null}>
+                <DeepLinkScanner />
+            </Suspense>
             <header className="flex justify-between items-center mb-12">
-                <div>
-                    <h1 className="text-h2 mb-1">Assalamu Alaikum, {user.firstName}</h1>
-                    <p className="text-secondary">Welcome to the MSSN RAMS Dashboard</p>
+                <div className="flex items-center gap-4">
+                    <Image src="/logo.png" alt="MSSN Logo" width={52} height={52} className="rounded-full bg-white shadow-sm p-1" />
+                    <div>
+                        <h1 className="text-h2 mb-1">Assalamu Alaikum, {user.firstName}</h1>
+                        <p className="text-secondary hidden sm:block">Welcome to the MSSN RAMS Dashboard</p>
+                    </div>
                 </div>
 
                 <SignOutButton />

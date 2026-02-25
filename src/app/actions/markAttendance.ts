@@ -16,12 +16,32 @@ export async function markAttendance(eventId: string) {
 
     const userId = (session.user as any).id;
     if (!userId) {
-        return { error: "User profile incomplete." };
+        return { error: "User profile incomplete. Please complete your profile first." };
+    }
+
+    let parsedEventId = eventId;
+
+    // Attempt to parse dynamic QR JSON for anti-fraud
+    try {
+        const data = JSON.parse(eventId);
+        if (data.eventId && data.exp) {
+            // Check if the QR code was generated more than 30 seconds ago (plus a small buffer)
+            if (Date.now() > data.exp) {
+                return { error: "This QR code has expired. Please scan the live screen again." };
+            }
+            parsedEventId = data.eventId;
+        } else {
+            return { error: "Invalid QR code format." };
+        }
+    } catch (e) {
+        // Fallback for extreme cases or testing, but in production we should reject non-JSON.
+        // For maximum security, we enforce the dynamic format:
+        return { error: "Invalid or outdated QR format. Please scan the current live screen." };
     }
 
     try {
         // 1. Check if event exists and is active
-        const event = await db.select().from(eventsTable).where(and(eq(eventsTable.id, eventId), eq(eventsTable.isActive, true))).limit(1);
+        const event = await db.select().from(eventsTable).where(and(eq(eventsTable.id, parsedEventId), eq(eventsTable.isActive, true))).limit(1);
 
         if (event.length === 0) {
             return { error: "This event is not active or does not exist." };
@@ -32,7 +52,7 @@ export async function markAttendance(eventId: string) {
             .from(attendanceTable)
             .where(and(
                 eq(attendanceTable.userId, userId),
-                eq(attendanceTable.eventId, eventId)
+                eq(attendanceTable.eventId, parsedEventId)
             ))
             .limit(1);
 
@@ -43,7 +63,7 @@ export async function markAttendance(eventId: string) {
         // 3. Mark Attendance
         await db.insert(attendanceTable).values({
             userId: userId,
-            eventId: eventId,
+            eventId: parsedEventId,
         });
 
         revalidatePath("/dashboard");

@@ -1,6 +1,7 @@
 'use client'
 
 import Link from "next/link";
+import Image from "next/image";
 import SignOutButton from "@/components/SignOutButton";
 
 export default function AdminNavbar({ user }: { user: any }) {
@@ -11,7 +12,10 @@ export default function AdminNavbar({ user }: { user: any }) {
         <nav className="bg-white border-b py-4 sticky top-0 z-50">
             <div className="container flex justify-between items-center">
                 <div className="flex items-center gap-8">
-                    <h2 className="text-lg m-0">MSSN RAMS <span className="text-mssn-green">Admin</span></h2>
+                    <div className="flex items-center gap-3">
+                        <Image src="/logo.png" alt="MSSN Logo" width={32} height={32} className="rounded-full bg-white shadow-sm" />
+                        <h2 className="text-lg m-0">MSSN RAMS <span className="text-mssn-green">Admin</span></h2>
+                    </div>
 
                     <div className="flex gap-6 font-medium text-sm">
                         <Link href="/admin" className="text-secondary no-underline">Overview</Link>

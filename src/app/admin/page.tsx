@@ -4,7 +4,7 @@ import { db } from "@/db";
 import { attendanceTable, eventsTable, usersTable } from "@/db/schema";
 import { eq, count, and } from "drizzle-orm";
 import Link from "next/link";
-import QRCode from "react-qr-code";
+import DynamicQRCode from "@/components/DynamicQRCode";
 
 export default async function AdminOverview() {
     // Basic stats
@@ -86,10 +86,8 @@ export default async function AdminOverview() {
                     <h3 className="mb-4">Active Event QR Code</h3>
                     {activeEvent.length > 0 ? (
                         <>
-                            <div className="bg-white p-4 rounded-xl shadow-sm inline-block mb-4">
-                                <QRCode value={activeEvent[0].id} size={180} level="H" />
-                            </div>
-                            <p className="text-sm text-secondary">
+                            <DynamicQRCode eventId={activeEvent[0].id} />
+                            <p className="text-sm text-secondary mt-2">
                                 Display this code at the venue for students to scan.
                             </p>
                         </>
