@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { updateUserRole } from '@/app/actions/userActions';
 import { Search } from 'lucide-react';
 
-export default function UsersManager({ initialUsers }: { initialUsers: { id: string, email: string, firstName: string, lastName: string, role: string, matricNumber: string | null, level: string | null, category: string | null }[] }) {
+export default function UsersManager({ initialUsers }: { initialUsers: { id: string, email: string, firstName: string | null, lastName: string | null, role: string, matricNumber: string | null, level: string | null, category: string | null }[] }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
 

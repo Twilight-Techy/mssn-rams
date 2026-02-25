@@ -5,7 +5,7 @@ import { toggleServedStatus, searchUsersForAttendance, markManualAttendance, reg
 import { Search, Undo2, Check, UserPlus, X, AlertCircle } from 'lucide-react';
 
 
-export default function LiveFeed({ initialRecords }: { initialRecords: { id: string, status: string, checkInTime: Date, user: { firstName: string, lastName: string, matricNumber: string | null, gender: string, level: string | null } }[] }) {
+export default function LiveFeed({ initialRecords }: { initialRecords: { id: string, status: string, checkInTime: string, servedAt?: string | null, user: { firstName: string | null, lastName: string | null, matricNumber: string | null, gender: string | null, level: string | null } }[] }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState<'all' | 'marked' | 'served'>('all');
     const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
