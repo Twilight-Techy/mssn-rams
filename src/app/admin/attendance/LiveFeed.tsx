@@ -157,7 +157,7 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
                             <tr key={record.id} className={record.status === 'served' ? 'bg-black-02' : 'bg-transparent'}>
                                 <td>
                                     <div className="font-semibold">{record.user.firstName} {record.user.lastName}</div>
-                                    <div className="text-sm text-secondary">{record.user.gender}</div>
+                                    <div className="text-sm text-secondary">{record.user.gender ? record.user.gender.charAt(0).toUpperCase() + record.user.gender.slice(1) : ''}</div>
                                 </td>
                                 <td>
                                     <div>{record.user.matricNumber || 'N/A'}</div>

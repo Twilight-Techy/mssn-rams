@@ -55,7 +55,7 @@ export default function UsersManager({ initialUsers }: { initialUsers: { id: str
                             <tr key={user.id}>
                                 <td className="font-medium">
                                     {user.firstName} {user.lastName} <br />
-                                    <span className="text-xs text-secondary">{user.category}</span>
+                                    <span className="text-xs text-secondary">{user.category ? user.category.charAt(0).toUpperCase() + user.category.slice(1) : ''}</span>
                                 </td>
                                 <td className="text-secondary text-sm">{user.email}</td>
                                 <td>
