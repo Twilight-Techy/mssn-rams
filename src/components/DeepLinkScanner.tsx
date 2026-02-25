@@ -55,8 +55,8 @@ export default function DeepLinkScanner() {
 
     if (error) {
         return (
-            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                <div className="glass-card p-8 max-w-[400px] w-full text-center bg-white">
+            <div className="modal-overlay">
+                <div className="glass-card p-8 text-center modal-card">
                     <div className="mx-auto flex justify-center items-center w-16 h-16 rounded-full mb-4 bg-red-100">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--status-red)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <circle cx="12" cy="12" r="10"></circle>
@@ -66,7 +66,7 @@ export default function DeepLinkScanner() {
                     </div>
                     <h3 className="text-red-800 mb-2">Scan Failed</h3>
                     <p className="text-red-600 mb-6 font-medium">{error}</p>
-                    <button onClick={clearError} className="btn-primary bg-red-600 hover:bg-red-700 mx-auto border-none w-full">Dismiss</button>
+                    <button onClick={clearError} className="btn-primary btn-danger w-full">Dismiss</button>
                 </div>
             </div>
         );
