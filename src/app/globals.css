@@ -1046,12 +1046,13 @@ label {
     gap: 1rem;
     align-items: flex-start;
     margin-bottom: 2rem;
-    padding-top: 0.5rem;
+    margin-top: 1rem;
   }
 
   .dashboard-actions {
     width: 100%;
     justify-content: space-between;
+    overflow: hidden;
   }
 }
 
