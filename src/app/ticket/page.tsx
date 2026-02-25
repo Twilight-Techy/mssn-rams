@@ -24,7 +24,7 @@ export default async function TicketPage() {
 
     return (
         <div className="container">
-            <div className="pt-4 pb-2">
+            <div className="pt-8 pb-2">
                 <Link href="/dashboard" className="inline-flex items-center text-secondary no-underline font-medium gap-2">
                     <ArrowLeft size={18} /> Dashboard
                 </Link>

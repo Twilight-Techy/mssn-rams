@@ -34,7 +34,7 @@ export default async function DashboardPage() {
     }
 
     return (
-        <div className="container pt-8">
+        <div className="container pt-12">
             <Suspense fallback={null}>
                 <DeepLinkScanner />
             </Suspense>
@@ -47,7 +47,12 @@ export default async function DashboardPage() {
                     </div>
                 </div>
 
-                <SignOutButton />
+                <div className="flex items-center gap-3">
+                    <span className="badge badge-green">
+                        {user.role === 'super_admin' ? 'SUPER ADMIN' : user.role.toUpperCase()}
+                    </span>
+                    <SignOutButton />
+                </div>
             </header>
 
             <main className="grid grid-cols-overview gap-8">
