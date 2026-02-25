@@ -5,7 +5,7 @@ import { updateUserProfile } from '@/app/actions/updateUser';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function ProfileCompletionForm({ user }: { user: any }) {
-    const [userType, setUserType] = useState<'muslim_student' | 'others'>('muslim_student');
+    const [userType, setUserType] = useState<'muslim_student' | 'others' | ''>('');
     const [loading, setLoading] = useState(false);
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -42,7 +42,9 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
                         value={userType}
                         onChange={(e) => setUserType(e.target.value as 'muslim_student' | 'others')}
                         title="Select Category"
+                        required
                     >
+                        <option value="" disabled>Select Category</option>
                         <option value="muslim_student">Muslim Student</option>
                         <option value="others">Others (Staff, Guest, Non-Muslim)</option>
                     </select>
@@ -60,7 +62,7 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
                             <div className="flex-1">
                                 <label>Level</label>
                                 <select name="level" required title="Select Level">
-                                    <option value="">Select Level</option>
+                                    <option value="" disabled>Select Level</option>
                                     <option value="100">100 Level</option>
                                     <option value="200">200 Level</option>
                                     <option value="300">300 Level</option>
