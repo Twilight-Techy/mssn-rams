@@ -7,13 +7,16 @@ import { Search, Undo2, Check, UserPlus, X, AlertCircle } from 'lucide-react';
 
 export default function LiveFeed({ initialRecords }: { initialRecords: { id: string, status: string, checkInTime: Date, user: { firstName: string, lastName: string, matricNumber: string | null, gender: string, level: string | null } }[] }) {
     const [searchQuery, setSearchQuery] = useState('');
+    const [filterStatus, setFilterStatus] = useState<'all' | 'marked' | 'served'>('all');
     const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
 
 
-    const filteredRecords = initialRecords.filter(r =>
-        (r.user.firstName + ' ' + r.user.lastName).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (r.user.matricNumber || '').toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredRecords = initialRecords.filter(r => {
+        const matchesSearch = (r.user.firstName + ' ' + r.user.lastName).toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (r.user.matricNumber || '').toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesFilter = filterStatus === 'all' || r.status === filterStatus;
+        return matchesSearch && matchesFilter;
+    });
 
     const handleToggle = async (id: string, currentStatus: 'marked' | 'served') => {
         setLoadingMap(prev => ({ ...prev, [id]: true }));
@@ -25,7 +28,7 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
     // Manual Attendance State
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userSearchQuery, setUserSearchQuery] = useState('');
-    const [userSearchResults, setUserSearchResults] = useState<{ id: string, firstName: string, lastName: string, matricNumber: string | null, level: string | null }[]>([]);
+    const [userSearchResults, setUserSearchResults] = useState<{ id: string, firstName: string | null, lastName: string | null, matricNumber: string | null, level: string | null }[]>([]);
     const [searchingUsers, setSearchingUsers] = useState(false);
     const [markingUserId, setMarkingUserId] = useState<string | null>(null);
 
@@ -96,6 +99,17 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
                     >
                         <UserPlus size={18} /> Manual Check-in
                     </button>
+                    <select
+                        value={filterStatus}
+                        onChange={(e) => setFilterStatus(e.target.value as 'all' | 'marked' | 'served')}
+                        className="py-2 px-3 pr-8 border border-black-10 rounded-lg bg-white text-sm"
+                        title="Filter by Status"
+                        aria-label="Filter by Status"
+                    >
+                        <option value="all">All Status</option>
+                        <option value="marked">To Serve (Marked)</option>
+                        <option value="served">Served</option>
+                    </select>
                     <div className="relative w-full sm:w-300">
                         <Search size={18} className="absolute left-3 top-50 translate-y-50-rev text-secondary" />
                         <input
@@ -138,7 +152,7 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
                                 <td className="text-right">
                                     {record.status === 'marked' ? (
                                         <button
-                                            onClick={() => handleToggle(record.id, record.status)}
+                                            onClick={() => handleToggle(record.id, record.status as 'marked' | 'served')}
                                             disabled={loadingMap[record.id]}
                                             className="btn-primary py-2 px-4 text-sm"
                                         >
@@ -150,7 +164,7 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
                                                 <Check size={14} /> SERVED
                                             </span>
                                             <button
-                                                onClick={() => handleToggle(record.id, record.status)}
+                                                onClick={() => handleToggle(record.id, record.status as 'marked' | 'served')}
                                                 disabled={loadingMap[record.id]}
                                                 className="btn-outline py-2 px-3 text-sm border-gray text-secondary"
                                                 title="Undo Serve"
