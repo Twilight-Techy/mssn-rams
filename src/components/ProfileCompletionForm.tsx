@@ -20,7 +20,6 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
             formData.append('isMuslim', 'true');
         } else {
             formData.append('category', 'others');
-            formData.append('isMuslim', 'false');
         }
 
         await updateUserProfile(formData);

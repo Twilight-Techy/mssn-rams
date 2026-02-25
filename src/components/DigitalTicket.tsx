@@ -42,8 +42,11 @@ export default function DigitalTicket({ ticket }: { ticket: any }) {
                     {ticket.user.firstName} {ticket.user.lastName}
                 </h2>
                 <p className="mt-2 font-medium">
-                    {ticket.user.level}L • {ticket.user.gender === 'brother' ? 'Brother' : 'Sister'}
+                    {ticket.user.level ? `${ticket.user.level}L • ` : ''}{ticket.user.gender === 'brother' ? 'Brother' : 'Sister'}
                 </p>
+                <span className={`inline-block mt-2 text-xs font-semibold px-3 py-1 rounded-full ${ticket.user.isMuslim && ticket.user.category === 'student' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-700'}`}>
+                    {ticket.user.isMuslim && ticket.user.category === 'student' ? 'Muslim Student' : 'Others'}
+                </span>
             </div>
 
             <div className={`p-8 ${isServed ? 'bg-black-02' : 'bg-success-light'}`}>

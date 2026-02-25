@@ -29,7 +29,9 @@ export async function getActiveTicket() {
             lastName: usersTable.lastName,
             level: usersTable.level,
             gender: usersTable.gender,
-            matricNumber: usersTable.matricNumber
+            matricNumber: usersTable.matricNumber,
+            isMuslim: usersTable.isMuslim,
+            category: usersTable.category
         },
         event: {
             title: eventsTable.title,
