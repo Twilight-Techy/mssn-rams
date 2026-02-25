@@ -5,7 +5,9 @@ import { updateUserProfile } from '@/app/actions/updateUser';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function ProfileCompletionForm({ user }: { user: any }) {
-    const [userType, setUserType] = useState<'muslim_student' | 'others' | ''>('');
+    // Derive initial category from existing user data
+    const initialType = user?.category === 'student' && user?.isMuslim ? 'muslim_student' : user?.category === 'others' ? 'others' : '';
+    const [userType, setUserType] = useState<'muslim_student' | 'others' | ''>(initialType);
     const [loading, setLoading] = useState(false);
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -55,13 +57,13 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
                     <>
                         <div>
                             <label>Matric Number</label>
-                            <input type="text" name="matricNumber" placeholder="e.g. 210000000" />
+                            <input type="text" name="matricNumber" placeholder="e.g. 210000000" defaultValue={user?.matricNumber || ""} />
                         </div>
 
                         <div className="flex gap-4">
                             <div className="flex-1">
                                 <label>Level</label>
-                                <select name="level" required title="Select Level">
+                                <select name="level" required defaultValue={user?.level || ""} title="Select Level">
                                     <option value="" disabled>Select Level</option>
                                     <option value="100">100 Level</option>
                                     <option value="200">200 Level</option>
