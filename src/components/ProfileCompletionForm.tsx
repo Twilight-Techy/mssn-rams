@@ -37,27 +37,15 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
 
                 {/* Simplified Category Toggle */}
                 <div>
-                    <label>I am a...</label>
-                    <div className="flex gap-4 mt-2">
-                        <label className="flex items-center gap-2 cursor-pointer">
-                            <input
-                                type="radio"
-                                checked={userType === 'muslim_student'}
-                                onChange={() => setUserType('muslim_student')}
-                                className="w-auto"
-                            />
-                            Muslim Student
-                        </label>
-                        <label className="flex items-center gap-2 cursor-pointer">
-                            <input
-                                type="radio"
-                                checked={userType === 'others'}
-                                onChange={() => setUserType('others')}
-                                className="w-auto"
-                            />
-                            Others (Staff, Guest, Non-Muslim)
-                        </label>
-                    </div>
+                    <label>Category</label>
+                    <select
+                        value={userType}
+                        onChange={(e) => setUserType(e.target.value as 'muslim_student' | 'others')}
+                        title="Select Category"
+                    >
+                        <option value="muslim_student">Muslim Student</option>
+                        <option value="others">Others (Staff, Guest, Non-Muslim)</option>
+                    </select>
                 </div>
 
                 {/* Extra fields only for Muslim Students */}
