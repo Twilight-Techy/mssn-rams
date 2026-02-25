@@ -38,7 +38,9 @@ export async function getLiveAttendance(searchQuery?: string) {
             lastName: usersTable.lastName,
             matricNumber: usersTable.matricNumber,
             gender: usersTable.gender,
-            level: usersTable.level
+            level: usersTable.level,
+            isMuslim: usersTable.isMuslim,
+            category: usersTable.category
         }
     })
         .from(attendanceTable)

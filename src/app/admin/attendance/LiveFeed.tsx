@@ -5,9 +5,10 @@ import { toggleServedStatus, searchUsersForAttendance, markManualAttendance, reg
 import { Search, Undo2, Check, UserPlus, X, AlertCircle } from 'lucide-react';
 
 
-export default function LiveFeed({ initialRecords }: { initialRecords: { id: string, status: string, checkInTime: string, servedAt?: string | null, user: { firstName: string | null, lastName: string | null, matricNumber: string | null, gender: string | null, level: string | null } }[] }) {
+export default function LiveFeed({ initialRecords }: { initialRecords: { id: string, status: string, checkInTime: string, servedAt?: string | null, user: { firstName: string | null, lastName: string | null, matricNumber: string | null, gender: string | null, level: string | null, isMuslim: boolean | null, category: string | null } }[] }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState<'all' | 'marked' | 'served'>('all');
+    const [filterCategory, setFilterCategory] = useState<'all' | 'muslim' | 'others'>('all');
     const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
 
 
@@ -15,7 +16,10 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
         const matchesSearch = (r.user.firstName + ' ' + r.user.lastName).toLowerCase().includes(searchQuery.toLowerCase()) ||
             (r.user.matricNumber || '').toLowerCase().includes(searchQuery.toLowerCase());
         const matchesFilter = filterStatus === 'all' || r.status === filterStatus;
-        return matchesSearch && matchesFilter;
+        const matchesCategory = filterCategory === 'all' ||
+            (filterCategory === 'muslim' && r.user.isMuslim === true && r.user.category === 'student') ||
+            (filterCategory === 'others' && (r.user.isMuslim !== true || r.user.category !== 'student'));
+        return matchesSearch && matchesFilter && matchesCategory;
     });
 
     const handleToggle = async (id: string, currentStatus: 'marked' | 'served') => {
@@ -109,6 +113,17 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
                         <option value="all">All Status</option>
                         <option value="marked">To Serve (Marked)</option>
                         <option value="served">Served</option>
+                    </select>
+                    <select
+                        value={filterCategory}
+                        onChange={(e) => setFilterCategory(e.target.value as 'all' | 'muslim' | 'others')}
+                        className="py-2 px-3 pr-8 border border-black-10 rounded-lg bg-white text-sm"
+                        title="Filter by Category"
+                        aria-label="Filter by Category"
+                    >
+                        <option value="all">All Categories</option>
+                        <option value="muslim">Muslim Students</option>
+                        <option value="others">Others</option>
                     </select>
                     <div className="relative w-full sm:w-300">
                         <Search size={18} className="absolute left-3 top-50 translate-y-50-rev text-secondary" />
