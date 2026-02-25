@@ -6,13 +6,21 @@ import Image from "next/image";
 
 import SignOutButton from "@/components/SignOutButton";
 import QRScanner from "@/components/QRScanner";
-import DeepLinkScanner from "@/components/DeepLinkScanner"; // Force TS recheck
+import DeepLinkScanner from "@/components/DeepLinkScanner";
 import { Suspense } from "react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
 
 export default async function DashboardPage() {
     const user = await getUserProfile();
 
     if (!user) {
+        // Check if the user has a valid session but was deleted from DB
+        const session = await getServerSession(authOptions);
+        if (session) {
+            // User was deleted — force sign out to prevent redirect loop
+            redirect("/api/auth/force-signout");
+        }
         redirect("/");
     }
 

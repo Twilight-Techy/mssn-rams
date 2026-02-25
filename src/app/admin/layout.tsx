@@ -1,6 +1,8 @@
 import { getUserProfile } from "@/app/actions/getUser";
 import { redirect } from "next/navigation";
 import AdminNavbar from "./AdminNavbar";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
 
 export default async function AdminLayout({
     children,
@@ -9,7 +11,15 @@ export default async function AdminLayout({
 }) {
     const user = await getUserProfile();
 
-    if (!user || user.role === "user") {
+    if (!user) {
+        const session = await getServerSession(authOptions);
+        if (session) {
+            redirect("/api/auth/force-signout");
+        }
+        redirect("/");
+    }
+
+    if (user.role === "user") {
         redirect("/dashboard");
     }
 
