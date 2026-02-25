@@ -3,10 +3,10 @@ import ProfileCompletionForm from "@/components/ProfileCompletionForm";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { LogOut } from "lucide-react";
+
 import SignOutButton from "@/components/SignOutButton";
 import QRScanner from "@/components/QRScanner";
-import DeepLinkScanner from "@/components/DeepLinkScanner";
+import DeepLinkScanner from "@/components/DeepLinkScanner"; // Force TS recheck
 import { Suspense } from "react";
 
 export default async function DashboardPage() {
@@ -76,7 +76,7 @@ export default async function DashboardPage() {
                     </div>
                     <h3>My Iftar Ticket</h3>
                     <p className="text-secondary my-4 mb-8 text-sm flex-1">
-                        View your active ticket for today's event to show the coordinators.
+                        View your active ticket for today&apos;s event to show the coordinators.
                     </p>
                     <Link href="/ticket" className="btn-outline w-full block no-underline">View Ticket</Link>
                 </div>

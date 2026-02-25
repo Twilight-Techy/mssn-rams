@@ -2,7 +2,7 @@
 
 import { db } from "@/db";
 import { attendanceTable, eventsTable, usersTable } from "@/db/schema";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { revalidatePath } from "next/cache";
@@ -11,7 +11,7 @@ export async function getActiveTicket() {
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) return null;
 
-    const userId = (session.user as any).id;
+    const userId = (session.user as { id?: string }).id;
     if (!userId) return null;
 
     // Find the currently active event
@@ -59,7 +59,7 @@ export async function serveDigitalTicket(attendanceId: string) {
 
         revalidatePath('/ticket');
         return { success: true };
-    } catch (e) {
+    } catch {
         return { error: "Failed to mark as served." }
     }
 }

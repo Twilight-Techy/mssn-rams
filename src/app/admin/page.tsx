@@ -47,7 +47,7 @@ export default async function AdminOverview() {
 
                 <div className="glass-card p-8">
                     <h3 className="text-secondary text-sm font-medium flex items-center gap-2">
-                        Today's Attendance
+                        Today&apos;s Attendance
                         {activeEvent.length > 0 ? <span className="badge badge-green text-xs">Active</span> : <span className="badge bg-red-100 text-red-800 text-xs">Inactive</span>}
                     </h3>
                     <div className="text-4xl font-bold text-mssn-green mt-2">

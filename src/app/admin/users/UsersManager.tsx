@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { updateUserRole } from '@/app/actions/userActions';
 import { Search } from 'lucide-react';
 
-export default function UsersManager({ initialUsers }: { initialUsers: any[] }) {
+export default function UsersManager({ initialUsers }: { initialUsers: { id: string, email: string, firstName: string, lastName: string, role: string, matricNumber: string | null, level: string | null, category: string | null }[] }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
 
@@ -17,7 +17,7 @@ export default function UsersManager({ initialUsers }: { initialUsers: any[] }) 
 
     const handleRoleChange = async (id: string, role: string) => {
         setLoadingMap(prev => ({ ...prev, [id]: true }));
-        await updateUserRole(id, role as any);
+        await updateUserRole(id, role as "super_admin" | "admin" | "coordinator" | "user");
         setLoadingMap(prev => ({ ...prev, [id]: false }));
     };
 

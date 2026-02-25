@@ -20,8 +20,10 @@ export default function DynamicQRCode({ eventId }: { eventId: string }) {
     const progressRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // Run immediately on client mount
-        setToken(generateToken());
+        // We set the initial token in the hook directly if we want
+        if (!token) {
+            setToken(generateToken());
+        }
 
         const interval = setInterval(() => {
             setToken(generateToken());
@@ -36,6 +38,7 @@ export default function DynamicQRCode({ eventId }: { eventId: string }) {
             clearInterval(interval);
             clearInterval(progressInterval);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventId]);
 
     // Update the DOM directly to bypass CSS Linters that forbid inline style={{ width }}

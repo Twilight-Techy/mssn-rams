@@ -1,6 +1,5 @@
 import { getActiveTicket } from "@/app/actions/ticketActions";
 import DigitalTicket from "@/components/DigitalTicket";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
@@ -13,7 +12,7 @@ export default async function TicketPage() {
                 <div className="glass-card p-12 max-w-[500px] mx-auto">
                     <h2 className="mb-4">No Active Ticket Found</h2>
                     <p className="text-secondary mb-8">
-                        You haven't marked attendance for the current event, or there is no active event right now.
+                        You haven&apos;t marked attendance for the current event, or there is no active event right now.
                     </p>
                     <Link href="/dashboard" className="btn-primary flex items-center justify-center gap-2">
                         <ArrowLeft size={18} /> Return to Dashboard

@@ -9,27 +9,27 @@ import { revalidatePath } from "next/cache";
 
 export async function getUsers(searchQuery?: string) {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.email || (session.user as any).role !== 'super_admin') return [];
+    if (!session?.user?.email || (session.user as { role?: string }).role !== 'super_admin') return [];
 
-    let query = db.select().from(usersTable);
+    const baseQuery = db.select().from(usersTable);
 
     if (searchQuery) {
-        query = query.where(
+        return await baseQuery.where(
             or(
                 like(usersTable.firstName, `%${searchQuery}%`),
                 like(usersTable.lastName, `%${searchQuery}%`),
                 like(usersTable.email, `%${searchQuery}%`),
                 like(usersTable.matricNumber, `%${searchQuery}%`)
             )
-        ) as any;
+        ).limit(50);
     }
 
-    return await query.limit(50); // Limit for performance
+    return await baseQuery.limit(50); // Limit for performance
 }
 
 export async function updateUserRole(userId: string, newRole: "super_admin" | "admin" | "coordinator" | "user") {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.email || (session.user as any).role !== 'super_admin') return { error: "Unauthorized" };
+    if (!session?.user?.email || (session.user as { role?: string }).role !== 'super_admin') return { error: "Unauthorized" };
 
     try {
         await db.update(usersTable)
@@ -37,7 +37,7 @@ export async function updateUserRole(userId: string, newRole: "super_admin" | "a
             .where(eq(usersTable.id, userId));
         revalidatePath("/admin/users");
         return { success: true };
-    } catch (e) {
+    } catch {
         return { error: "Failed to update role" };
     }
 }

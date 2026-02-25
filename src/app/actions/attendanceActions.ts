@@ -2,7 +2,7 @@
 
 import { db } from "@/db";
 import { attendanceTable, eventsTable, usersTable } from "@/db/schema";
-import { eq, and, desc, like, or } from "drizzle-orm";
+import { eq, and, desc, like, or, SQL } from "drizzle-orm";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { revalidatePath } from "next/cache";
@@ -15,7 +15,7 @@ export async function getLiveAttendance(searchQuery?: string) {
     const activeEvent = await db.select().from(eventsTable).where(eq(eventsTable.isActive, true)).limit(1);
     if (activeEvent.length === 0) return [];
 
-    let whereCondition = eq(attendanceTable.eventId, activeEvent[0].id);
+    let whereCondition: SQL | undefined = eq(attendanceTable.eventId, activeEvent[0].id);
 
     if (searchQuery) {
         whereCondition = and(
@@ -25,7 +25,7 @@ export async function getLiveAttendance(searchQuery?: string) {
                 like(usersTable.lastName, `%${searchQuery}%`),
                 like(usersTable.matricNumber, `%${searchQuery}%`)
             )
-        ) as any;
+        );
     }
 
     const query = db.select({
@@ -59,20 +59,20 @@ export async function toggleServedStatus(attendanceId: string, currentStatus: 'm
             .set({
                 status: isCurrentlyServed ? 'marked' : 'served',
                 servedAt: isCurrentlyServed ? null : new Date(),
-                servedBy: isCurrentlyServed ? null : (session.user as any).id
+                servedBy: (session.user as { id?: string }).id || null
             })
             .where(eq(attendanceTable.id, attendanceId));
 
         revalidatePath('/admin/attendance');
         return { success: true };
-    } catch (e) {
+    } catch {
         return { error: "Failed to update record" };
     }
 }
 
 export async function searchUsersForAttendance(query: string) {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.email || (session.user as any).role === 'user') return [];
+    if (!session?.user?.email || (session.user as { role?: string }).role === 'user') return [];
 
     if (!query || query.length < 2) return [];
 
@@ -100,7 +100,7 @@ export async function searchUsersForAttendance(query: string) {
 
 export async function markManualAttendance(userId: string) {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.email || (session.user as any).role === 'user') return { error: "Unauthorized" };
+    if (!session?.user?.email || (session.user as { role?: string }).role === 'user') return { error: "Unauthorized" };
 
     try {
         const activeEvent = await db.select().from(eventsTable).where(eq(eventsTable.isActive, true)).limit(1);
@@ -136,7 +136,7 @@ export async function markManualAttendance(userId: string) {
 
 export async function registerOfflineUser(data: { firstName: string, lastName: string, email: string, matricNumber: string, gender: 'Brother' | 'Sister', level: string }) {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.email || (session.user as any).role === 'user') return { error: "Unauthorized" };
+    if (!session?.user?.email || (session.user as { role?: string }).role === 'user') return { error: "Unauthorized" };
 
     try {
         // 1. Check if email already exists

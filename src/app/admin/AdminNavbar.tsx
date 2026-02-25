@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import SignOutButton from "@/components/SignOutButton";
 
-export default function AdminNavbar({ user }: { user: any }) {
+export default function AdminNavbar({ user }: { user: { role: string } }) {
     const isSuperAdmin = user.role === "super_admin";
     const isAdmin = user.role === "admin" || isSuperAdmin;
 

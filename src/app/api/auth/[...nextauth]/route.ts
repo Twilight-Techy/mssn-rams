@@ -30,9 +30,12 @@ export const authOptions: AuthOptions = {
             if (session.user?.email) {
                 const dbUser = await db.select().from(usersTable).where(eq(usersTable.email, session.user.email)).limit(1);
                 if (dbUser[0]) {
-                    (session.user as any).id = dbUser[0].id;
-                    (session.user as any).role = dbUser[0].role;
-                    (session.user as any).matricNumber = dbUser[0].matricNumber;
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    const enhancedSession = session as any;
+                    enhancedSession.user.id = dbUser[0].id;
+                    enhancedSession.user.role = dbUser[0].role;
+                    enhancedSession.user.matricNumber = dbUser[0].matricNumber;
+                    return enhancedSession;
                 }
             }
             return session;

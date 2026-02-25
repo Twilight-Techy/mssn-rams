@@ -6,7 +6,6 @@ import { markAttendance } from '@/app/actions/markAttendance';
 import { useRouter } from 'next/navigation';
 
 export default function QRScanner() {
-    const [scanResult, setScanResult] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -29,7 +28,6 @@ export default function QRScanner() {
             if (scanner) {
                 scanner.clear(); // Stop scanning once we have a hit
             }
-            setScanResult(decodedText);
             setLoading(true);
             setError(null);
 
@@ -44,13 +42,13 @@ export default function QRScanner() {
                 } else if (result.success && result.redirect) {
                     router.push(result.redirect);
                 }
-            } catch (e) {
+            } catch {
                 setError("Network error while trying to mark attendance.");
                 setLoading(false);
             }
         }
 
-        function onScanFailure(error: any) {
+        function onScanFailure() {
             // Ignore background scan failures
         }
 

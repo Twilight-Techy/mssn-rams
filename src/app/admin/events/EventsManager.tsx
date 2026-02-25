@@ -2,12 +2,9 @@
 
 import { useState } from 'react';
 import { createEvent, toggleEventStatus } from '@/app/actions/eventActions';
-import { useRouter } from 'next/navigation';
 
-export default function EventsManager({ events }: { events: any[] }) {
+export default function EventsManager({ events }: { events: { id: string, title: string, isActive: boolean, date: Date }[] }) {
     const [loading, setLoading] = useState(false);
-    const router = useRouter();
-
     async function handleCreate(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setLoading(true);

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { serveDigitalTicket } from "@/app/actions/ticketActions";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function DigitalTicket({ ticket }: { ticket: any }) {
     const [currentTime, setCurrentTime] = useState<Date>(new Date());
     const [isServed, setIsServed] = useState(ticket.status === 'served');

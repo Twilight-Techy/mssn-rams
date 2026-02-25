@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { updateUserProfile } from '@/app/actions/updateUser';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function ProfileCompletionForm({ user }: { user: any }) {
     const [category, setCategory] = useState(user?.category || 'student');
     const [loading, setLoading] = useState(false);

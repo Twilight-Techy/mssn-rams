@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { toggleServedStatus, searchUsersForAttendance, markManualAttendance, registerOfflineUser } from '@/app/actions/attendanceActions';
 import { Search, Undo2, Check, UserPlus, X, AlertCircle } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
-export default function LiveFeed({ initialRecords }: { initialRecords: any[] }) {
+
+export default function LiveFeed({ initialRecords }: { initialRecords: { id: string, status: string, checkInTime: Date, user: { firstName: string, lastName: string, matricNumber: string | null, gender: string, level: string | null } }[] }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
-    const router = useRouter();
+
 
     const filteredRecords = initialRecords.filter(r =>
         (r.user.firstName + ' ' + r.user.lastName).toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -25,7 +25,7 @@ export default function LiveFeed({ initialRecords }: { initialRecords: any[] }) 
     // Manual Attendance State
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userSearchQuery, setUserSearchQuery] = useState('');
-    const [userSearchResults, setUserSearchResults] = useState<any[]>([]);
+    const [userSearchResults, setUserSearchResults] = useState<{ id: string, firstName: string, lastName: string, matricNumber: string | null, level: string | null }[]>([]);
     const [searchingUsers, setSearchingUsers] = useState(false);
     const [markingUserId, setMarkingUserId] = useState<string | null>(null);
 

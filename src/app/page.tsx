@@ -1,4 +1,5 @@
 import { getServerSession } from "next-auth/next";
+import Image from "next/image";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
@@ -17,10 +18,13 @@ export default async function Home() {
       <div className={`glass-card ${styles.loginCard}`}>
         <div className={styles.logoContainer}>
           {/* We will rely on the user to put logo.png in public dir */}
-          <img
+          <Image
             src="/logo.png"
             alt="MSSN LASU Epe Logo"
             className={styles.logo}
+            width={120}
+            height={120}
+            priority
           />
         </div>
 
@@ -34,7 +38,7 @@ export default async function Home() {
         </Suspense>
 
         <p className={styles.footerText}>
-          &copy; {new Date().getFullYear()} Muslim Students' Society of Nigeria <br /> LASU Epe Branch
+          &copy; {new Date().getFullYear()} Muslim Students&apos; Society of Nigeria <br /> LASU Epe Branch
         </p>
       </div>
     </div>

@@ -14,7 +14,7 @@ export async function markAttendance(eventId: string) {
         return { error: "You must be logged in to mark attendance." };
     }
 
-    const userId = (session.user as any).id;
+    const userId = (session.user as { id?: string }).id;
     if (!userId) {
         return { error: "User profile incomplete. Please complete your profile first." };
     }
@@ -33,7 +33,7 @@ export async function markAttendance(eventId: string) {
         } else {
             return { error: "Invalid QR code format." };
         }
-    } catch (e) {
+    } catch {
         // Fallback for extreme cases or testing, but in production we should reject non-JSON.
         // For maximum security, we enforce the dynamic format:
         return { error: "Invalid or outdated QR format. Please scan the current live screen." };

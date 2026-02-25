@@ -28,7 +28,7 @@ export default function DeepLinkScanner() {
                     // Clean URL on success and go to ticket
                     router.replace(result.redirect);
                 }
-            } catch (e) {
+            } catch {
                 setError("Network error while processing external scan.");
             } finally {
                 setLoading(false);

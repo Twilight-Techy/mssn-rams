@@ -22,7 +22,7 @@ export async function createEvent(formData: FormData) {
         });
         revalidatePath("/admin/events");
         return { success: true };
-    } catch (e) {
+    } catch {
         return { error: "Failed to create event" };
     }
 }
@@ -43,7 +43,7 @@ export async function toggleEventStatus(eventId: string, currentStatus: boolean)
 
         revalidatePath("/admin/events");
         return { success: true };
-    } catch (e) {
+    } catch {
         return { error: "Failed to toggle status" };
     }
 }
