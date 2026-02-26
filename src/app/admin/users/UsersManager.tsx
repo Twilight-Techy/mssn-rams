@@ -30,7 +30,10 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
 
     const handleRoleChange = async (id: string, role: string) => {
         setLoadingMap(prev => ({ ...prev, [id]: true }));
-        await updateUserRole(id, role as "super_admin" | "admin" | "coordinator" | "user");
+        const result = await updateUserRole(id, role as "super_admin" | "admin" | "coordinator" | "user");
+        if (result?.success) {
+            setUsers(prev => prev.map(u => u.id === id ? { ...u, role } : u));
+        }
         setLoadingMap(prev => ({ ...prev, [id]: false }));
     };
 
