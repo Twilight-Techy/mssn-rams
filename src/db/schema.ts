@@ -16,7 +16,7 @@ export const usersTable = pgTable("users", {
             "Animal Science", "Crop Production", "Agricultural Economics and Farm Management", "Agricultural Extension",
             "Quantity Surveying", "Fine Art", "Industrial Design", "Survey and Geo Informatics", "Urban and Rural Planning", "Estate Management", "Environmental Management", "Architecture",
             "Electronics and Computer Engineering", "Mechanical Engineering", "Chemical Engineering", "Aerospace Engineering", "Civil Engineering", "Industrial and Systems Engineering",
-            "Diploma"
+            "Diploma", "Part-Time", "PDS"
         ]
     }),
     phoneNumber: text("phone_number"),

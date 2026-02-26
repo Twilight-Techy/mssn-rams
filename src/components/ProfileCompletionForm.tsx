@@ -115,8 +115,10 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
                                         <option value="Environmental Management">Environmental Management</option>
                                         <option value="Architecture">Architecture</option>
                                     </optgroup>
-                                    <optgroup label="Other">
+                                    <optgroup label="Others">
                                         <option value="Diploma">Diploma</option>
+                                        <option value="Part-Time">Part-Time</option>
+                                        <option value="PDS">PDS</option>
                                     </optgroup>
                                 </select>
                             </div>
