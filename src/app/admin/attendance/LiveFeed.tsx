@@ -9,19 +9,20 @@ import { Search, Undo2, Check, UserPlus, X, AlertCircle, Ban, ShieldCheck } from
 export default function LiveFeed({ initialRecords }: { initialRecords: { id: string, status: string, checkInTime: string, servedAt?: string | null, user: { id: string, firstName: string | null, lastName: string | null, matricNumber: string | null, gender: string | null, level: string | null, isMuslim: boolean | null, category: string | null, isBlacklisted?: boolean } }[] }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState<'all' | 'marked' | 'served'>('all');
-    const [filterCategory, setFilterCategory] = useState<'all' | 'muslim_student' | 'non_muslim_student' | 'others'>('all');
+    const [filterCategory, setFilterCategory] = useState<'all' | 'muslim_student' | 'others'>('all');
+    const [filterGender, setFilterGender] = useState<'all' | 'brother' | 'sister'>('all');
     const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
 
 
     const filteredRecords = initialRecords.filter(r => {
         const matchesSearch = (r.user.firstName + ' ' + r.user.lastName).toLowerCase().includes(searchQuery.toLowerCase()) ||
             (r.user.matricNumber || '').toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesFilter = filterStatus === 'all' || r.status === filterStatus;
+        const matchesStatus = filterStatus === 'all' || r.status === filterStatus;
         const matchesCategory = filterCategory === 'all' ||
             (filterCategory === 'muslim_student' && r.user.isMuslim === true && r.user.category === 'student') ||
-            (filterCategory === 'non_muslim_student' && r.user.isMuslim !== true && r.user.category === 'student') ||
             (filterCategory === 'others' && r.user.category === 'others');
-        return matchesSearch && matchesFilter && matchesCategory;
+        const matchesGender = filterGender === 'all' || r.user.gender?.toLowerCase() === filterGender;
+        return matchesSearch && matchesStatus && matchesCategory && matchesGender;
     });
 
     const handleToggle = async (id: string, currentStatus: 'marked' | 'served') => {
@@ -77,7 +78,6 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
             setIsModalOpen(false);
             setUserSearchQuery('');
             setUserSearchResults([]);
-            setShowOfflineForm(false);
         } else {
             alert(res.error || 'Failed to mark attendance');
         }
@@ -92,7 +92,6 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
         if (res.success) {
             setIsModalOpen(false);
             setUserSearchQuery('');
-            setUserSearchResults([]);
             setShowOfflineForm(false);
             setOfflineData({ firstName: '', lastName: '', email: '', matricNumber: '', gender: 'Brother', level: '100' });
         } else {
@@ -102,38 +101,55 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
 
     return (
         <div>
-            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8">
-                <h1 className="text-h1 text-mssn-green-dark">Live Attendance</h1>
-                <div className="flex flex-col sm:flex-row gap-4 admin-filters">
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-4">
+                <div className="flex items-baseline gap-3">
+                    <h1 className="text-h1 text-mssn-green-dark">Live Attendance</h1>
+                    <span className="text-sm font-medium bg-black-05 px-3 py-1 rounded-full text-secondary">
+                        {filteredRecords.length} found
+                    </span>
+                </div>
+                <div className="flex flex-col xl:flex-row gap-4 admin-filters">
                     <button
                         onClick={() => setIsModalOpen(true)}
-                        className="btn-outline border-mssn-green text-mssn-green py-2 px-4 whitespace-nowrap flex items-center gap-2"
+                        className="btn-outline border-mssn-green text-mssn-green py-2 px-4 whitespace-nowrap flex items-center justify-center gap-2"
                     >
                         <UserPlus size={18} /> Manual Check-in
                     </button>
-                    <select
-                        value={filterStatus}
-                        onChange={(e) => setFilterStatus(e.target.value as 'all' | 'marked' | 'served')}
-                        className="py-2 px-3 pr-8 border border-black-10 rounded-lg bg-white text-sm"
-                        title="Filter by Status"
-                        aria-label="Filter by Status"
-                    >
-                        <option value="all">All Status</option>
-                        <option value="marked">To Serve (Marked)</option>
-                        <option value="served">Served</option>
-                    </select>
-                    <select
-                        value={filterCategory}
-                        onChange={(e) => setFilterCategory(e.target.value as 'all' | 'muslim_student' | 'non_muslim_student' | 'others')}
-                        className="py-2 px-3 pr-8 border border-black-10 rounded-lg bg-white text-sm"
-                        title="Filter by Category"
-                        aria-label="Filter by Category"
-                    >
-                        <option value="all">All Categories</option>
-                        <option value="muslim_student">Muslim Students</option>
-                        <option value="non_muslim_student">Non-Muslim Students</option>
-                        <option value="others">Others (Staff/Guest)</option>
-                    </select>
+                    <div className="flex flex-wrap gap-2">
+                        <select
+                            value={filterStatus}
+                            onChange={(e) => setFilterStatus(e.target.value as 'all' | 'marked' | 'served')}
+                            className="py-2 px-3 pr-8 border border-black-10 rounded-lg bg-white text-sm"
+                            title="Filter by Status"
+                            aria-label="Filter by Status"
+                        >
+                            <option value="all">All Status</option>
+                            <option value="marked">To Serve (Marked)</option>
+                            <option value="served">Served</option>
+                        </select>
+                        <select
+                            value={filterGender}
+                            onChange={(e) => setFilterGender(e.target.value as 'all' | 'brother' | 'sister')}
+                            className="py-2 px-3 pr-8 border border-black-10 rounded-lg bg-white text-sm"
+                            title="Filter by Gender"
+                            aria-label="Filter by Gender"
+                        >
+                            <option value="all">All Genders</option>
+                            <option value="brother">Brothers</option>
+                            <option value="sister">Sisters</option>
+                        </select>
+                        <select
+                            value={filterCategory}
+                            onChange={(e) => setFilterCategory(e.target.value as 'all' | 'muslim_student' | 'others')}
+                            className="py-2 px-3 pr-8 border border-black-10 rounded-lg bg-white text-sm"
+                            title="Filter by Category"
+                            aria-label="Filter by Category"
+                        >
+                            <option value="all">All Categories</option>
+                            <option value="muslim_student">Muslim Students</option>
+                            <option value="others">Others (Staff/Guest)</option>
+                        </select>
+                    </div>
                     <div className="relative w-full sm:w-300">
                         <Search size={18} className="absolute left-3 top-50 translate-y-50-rev text-secondary" />
                         <input
