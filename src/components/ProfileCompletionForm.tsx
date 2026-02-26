@@ -70,17 +70,40 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
                                     <option value="300">300 Level</option>
                                     <option value="400">400 Level</option>
                                     <option value="500">500 Level</option>
+                                    <option value="Alumni">Alumni</option>
                                 </select>
                             </div>
                             <div className="flex-1">
                                 <label>Department</label>
                                 <select name="department" required defaultValue={user?.department || ""} title="Select Department">
                                     <option value="" disabled>Select Department</option>
-                                    <option value="Electronics and Computer Engineering">Electronics and Computer Engineering</option>
-                                    <option value="Mechanical Engineering">Mechanical Engineering</option>
-                                    <option value="Aerospace Engineering">Aerospace Engineering</option>
-                                    <option value="Chemical and Polymer Engineering">Chemical and Polymer Engineering</option>
-                                    <option value="Others">Others</option>
+                                    <optgroup label="School of Agriculture">
+                                        <option value="Animal Science">Animal Science</option>
+                                        <option value="Crop Production">Crop Production</option>
+                                        <option value="Agricultural Economics and Farm Management">Agric. Economics &amp; Farm Mgmt</option>
+                                        <option value="Agricultural Extension">Agricultural Extension</option>
+                                    </optgroup>
+                                    <optgroup label="Faculty of Environmental Science">
+                                        <option value="Quantity Surveying">Quantity Surveying</option>
+                                        <option value="Fine Art">Fine Art</option>
+                                        <option value="Industrial Design">Industrial Design</option>
+                                        <option value="Survey and Geo Informatics">Survey &amp; Geo Informatics</option>
+                                        <option value="Urban and Rural Planning">Urban &amp; Rural Planning</option>
+                                        <option value="Estate Management">Estate Management</option>
+                                        <option value="Environmental Management">Environmental Management</option>
+                                        <option value="Architecture">Architecture</option>
+                                    </optgroup>
+                                    <optgroup label="Faculty of Engineering">
+                                        <option value="Electronics and Computer Engineering">Electronics &amp; Computer Eng.</option>
+                                        <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                        <option value="Chemical Engineering">Chemical Engineering</option>
+                                        <option value="Aerospace Engineering">Aerospace Engineering</option>
+                                        <option value="Civil Engineering">Civil Engineering</option>
+                                        <option value="Industrial and Systems Engineering">Industrial &amp; Systems Eng.</option>
+                                    </optgroup>
+                                    <optgroup label="Other">
+                                        <option value="Diploma">Diploma</option>
+                                    </optgroup>
                                 </select>
                             </div>
                         </div>
