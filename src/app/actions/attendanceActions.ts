@@ -40,6 +40,7 @@ export async function getLiveAttendance(searchQuery?: string) {
             matricNumber: usersTable.matricNumber,
             gender: usersTable.gender,
             level: usersTable.level,
+            classification: usersTable.classification,
             isMuslim: usersTable.isMuslim,
             category: usersTable.category,
             isBlacklisted: usersTable.isBlacklisted

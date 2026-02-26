@@ -12,6 +12,7 @@ type User = {
     role: string;
     matricNumber: string | null;
     level: string | null;
+    classification: string | null;
     category: string | null;
     isBlacklisted: boolean;
 };
@@ -69,7 +70,7 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
                         <tr>
                             <th>Name</th>
                             <th>Email</th>
-                            <th>Matric/Level</th>
+                            <th>Matric/Class</th>
                             <th>Status</th>
                             <th className="text-right">Role</th>
                         </tr>
@@ -84,9 +85,12 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
                                     <span className="text-xs text-secondary">{user.category ? user.category.charAt(0).toUpperCase() + user.category.slice(1) : ''}</span>
                                 </td>
                                 <td data-label="Email" className="text-secondary text-sm">{user.email}</td>
-                                <td data-label="Matric/Level">
+                                <td data-label="Matric/Class">
                                     <div className="text-sm">{user.matricNumber || 'N/A'}</div>
-                                    <div className="text-xs text-secondary">{user.level ? `${user.level}L` : ''}</div>
+                                    <div className="text-xs text-secondary">
+                                        {user.classification ? user.classification.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : ''}
+                                        {user.level ? ` (${user.level}${user.level.includes('Diploma') ? '' : 'L'})` : ''}
+                                    </div>
                                 </td>
                                 <td data-label="Status">
                                     <button

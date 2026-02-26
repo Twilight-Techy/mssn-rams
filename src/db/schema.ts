@@ -11,12 +11,12 @@ export const usersTable = pgTable("users", {
     matricNumber: text("matric_number").unique(),
     level: text("level"),
     gender: text("gender", { enum: ["brother", "sister"] }),
+    classification: text("classification", { enum: ["full_time_undergraduate", "diploma", "part_time", "pds"] }),
     department: text("department", {
         enum: [
             "Animal Science", "Crop Production", "Agricultural Economics and Farm Management", "Agricultural Extension",
             "Quantity Surveying", "Fine Art", "Industrial Design", "Survey and Geo Informatics", "Urban and Rural Planning", "Estate Management", "Environmental Management", "Architecture",
-            "Electronics and Computer Engineering", "Mechanical Engineering", "Chemical Engineering", "Aerospace Engineering", "Civil Engineering", "Industrial and Systems Engineering",
-            "Diploma", "Part-Time", "PDS"
+            "Electronics and Computer Engineering", "Mechanical Engineering", "Chemical Engineering", "Aerospace Engineering", "Civil Engineering", "Industrial and Systems Engineering"
         ]
     }),
     phoneNumber: text("phone_number"),

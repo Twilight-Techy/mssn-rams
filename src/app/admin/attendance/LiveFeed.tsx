@@ -6,7 +6,7 @@ import { toggleBlacklist } from '@/app/actions/userActions';
 import { Search, Undo2, Check, UserPlus, X, AlertCircle, Ban, ShieldCheck } from 'lucide-react';
 
 
-export default function LiveFeed({ initialRecords }: { initialRecords: { id: string, status: string, checkInTime: string, servedAt?: string | null, user: { id: string, firstName: string | null, lastName: string | null, matricNumber: string | null, gender: string | null, level: string | null, isMuslim: boolean | null, category: string | null, isBlacklisted?: boolean } }[] }) {
+export default function LiveFeed({ initialRecords }: { initialRecords: { id: string, status: string, checkInTime: string, servedAt?: string | null, user: { id: string, firstName: string | null, lastName: string | null, matricNumber: string | null, gender: string | null, level: string | null, classification: string | null, isMuslim: boolean | null, category: string | null, isBlacklisted?: boolean } }[] }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState<'all' | 'marked' | 'served'>('all');
     const [filterCategory, setFilterCategory] = useState<'all' | 'muslim_student' | 'others'>('all');
@@ -49,9 +49,9 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
     const [showOfflineForm, setShowOfflineForm] = useState(false);
     const [isRegistering, setIsRegistering] = useState(false);
     const [offlineData, setOfflineData] = useState<{
-        firstName: string; lastName: string; email: string; matricNumber: string; gender: 'Brother' | 'Sister'; level: string;
+        firstName: string; lastName: string; email: string; matricNumber: string; gender: 'Brother' | 'Sister'; level: string; classification: string;
     }>({
-        firstName: '', lastName: '', email: '', matricNumber: '', gender: 'Brother', level: '100'
+        firstName: '', lastName: '', email: '', matricNumber: '', gender: 'Brother', level: '100', classification: 'full_time_undergraduate'
     });
 
     const handleUserSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,14 +86,14 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
     const handleOfflineRegistration = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsRegistering(true);
-        const res = await registerOfflineUser({ ...offlineData, email: offlineData.email.toLowerCase().trim() });
+        const res = await registerOfflineUser(offlineData);
         setIsRegistering(false);
 
         if (res.success) {
             setIsModalOpen(false);
             setUserSearchQuery('');
             setShowOfflineForm(false);
-            setOfflineData({ firstName: '', lastName: '', email: '', matricNumber: '', gender: 'Brother', level: '100' });
+            setOfflineData({ firstName: '', lastName: '', email: '', matricNumber: '', gender: 'Brother', level: '100', classification: 'full_time_undergraduate' });
         } else {
             alert(res.error || 'Failed to register offline user');
         }
@@ -168,7 +168,7 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
                     <thead>
                         <tr>
                             <th>Attendee</th>
-                            <th>Matric/Level</th>
+                            <th>Matric/Class</th>
                             <th>Check-in</th>
                             <th>Status</th>
                             <th className="text-right">Action</th>
@@ -183,9 +183,12 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
                                     <div className="font-semibold">{record.user.firstName} {record.user.lastName}</div>
                                     <div className="text-sm text-secondary">{record.user.gender ? record.user.gender.charAt(0).toUpperCase() + record.user.gender.slice(1) : ''}</div>
                                 </td>
-                                <td data-label="Matric & Level">
+                                <td data-label="Matric & Class">
                                     <div>{record.user.matricNumber || 'N/A'}</div>
-                                    <div className="text-sm text-secondary">{record.user.level}L</div>
+                                    <div className="text-sm text-secondary">
+                                        {record.user.classification ? record.user.classification.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : ''}
+                                        {record.user.level ? ` (${record.user.level}${record.user.level.includes('Diploma') ? '' : 'L'})` : ''}
+                                    </div>
                                 </td>
                                 <td data-label="Check-in" className="text-secondary text-sm">
                                     {new Date(record.checkInTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

@@ -13,6 +13,7 @@ export async function updateUserProfile(formData: FormData) {
 
     const category = formData.get("category") as "student" | "others";
     const isMuslim = formData.get("isMuslim") === "true";
+    const classification = formData.get("classification") as typeof usersTable.classification.enumValues[number] | null;
     const matricNumber = formData.get("matricNumber") as string;
     const level = formData.get("level") as string;
     const gender = formData.get("gender") as "brother" | "sister";
@@ -34,6 +35,7 @@ export async function updateUserProfile(formData: FormData) {
             .set({
                 category,
                 isMuslim,
+                classification: classification || null,
                 matricNumber: cleanMatric,
                 level: level || null,
                 gender,
