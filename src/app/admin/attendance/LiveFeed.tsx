@@ -257,7 +257,7 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
                                                 <input required type="text" placeholder="Last Name" value={offlineData.lastName} onChange={e => setOfflineData({ ...offlineData, lastName: e.target.value })} className="w-full" />
                                             </div>
                                             <input required type="email" placeholder="Student's Real Email Address" value={offlineData.email} onChange={e => setOfflineData({ ...offlineData, email: e.target.value })} className="w-full" />
-                                            <input required type="text" placeholder="Matric Number" value={offlineData.matricNumber} onChange={e => setOfflineData({ ...offlineData, matricNumber: e.target.value })} className="w-full" />
+                                            <input type="text" placeholder="Matric Number (Optional)" value={offlineData.matricNumber} onChange={e => setOfflineData({ ...offlineData, matricNumber: e.target.value })} className="w-full" />
                                             <div className="grid grid-cols-2 gap-3">
                                                 <select title="Gender" aria-label="Select Gender" value={offlineData.gender} onChange={e => setOfflineData({ ...offlineData, gender: e.target.value as 'Brother' | 'Sister' })} className="w-full p-3 rounded-lg border border-black-10 bg-transparent text-black">
                                                     <option value="Brother">Brother</option>
