@@ -9,10 +9,12 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
     const initialType = user?.category === 'student' && user?.isMuslim ? 'muslim_student' : user?.category === 'others' ? 'others' : '';
     const [userType, setUserType] = useState<'muslim_student' | 'others' | ''>(initialType);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setLoading(true);
+        setError('');
 
         const formData = new FormData(e.currentTarget);
 
@@ -24,16 +26,28 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
             formData.append('category', 'others');
         }
 
-        await updateUserProfile(formData);
+        const res = await updateUserProfile(formData);
+        if (res?.error) {
+            setError(res.error);
+            setLoading(false);
+            return;
+        }
+
         setLoading(false);
     }
 
     return (
         <div className="glass-card p-8 max-w-[600px] mx-auto">
             <h2 className="mb-2">Complete Your Profile</h2>
-            <p className="text-secondary mb-8">
+            <p className="text-secondary mb-6">
                 Please provide a few more details to set up your RAMS account.
             </p>
+
+            {error && (
+                <div className="bg-danger-light text-danger p-4 rounded-lg mb-6 border border-danger font-medium text-sm">
+                    {error}
+                </div>
+            )}
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-6">
 

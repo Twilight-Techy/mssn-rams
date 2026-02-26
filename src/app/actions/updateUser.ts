@@ -20,11 +20,21 @@ export async function updateUserProfile(formData: FormData) {
     const phoneNumber = formData.get("phoneNumber") as string;
 
     try {
+        const cleanMatric = matricNumber?.trim() || null;
+
+        // Validation for duplicate matric numbers before updating
+        if (cleanMatric) {
+            const existingUser = await db.select().from(usersTable).where(eq(usersTable.matricNumber, cleanMatric)).limit(1);
+            if (existingUser.length > 0 && existingUser[0].email !== session.user.email) {
+                return { error: "This Matric Number is already registered to another account." };
+            }
+        }
+
         await db.update(usersTable)
             .set({
                 category,
                 isMuslim,
-                matricNumber: matricNumber || null,
+                matricNumber: cleanMatric,
                 level: level || null,
                 gender,
                 department: department || null,

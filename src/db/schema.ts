@@ -8,7 +8,7 @@ export const usersTable = pgTable("users", {
     role: text("role", { enum: ["super_admin", "admin", "coordinator", "user"] }).notNull().default("user"),
     category: text("category", { enum: ["student", "others"] }),
     isMuslim: boolean("is_muslim"),
-    matricNumber: text("matric_number"),
+    matricNumber: text("matric_number").unique(),
     level: text("level"),
     gender: text("gender", { enum: ["brother", "sister"] }),
     department: text("department", {
