@@ -31,7 +31,8 @@ export async function getActiveTicket() {
             gender: usersTable.gender,
             matricNumber: usersTable.matricNumber,
             isMuslim: usersTable.isMuslim,
-            category: usersTable.category
+            category: usersTable.category,
+            isBlacklisted: usersTable.isBlacklisted
         },
         event: {
             title: eventsTable.title,
