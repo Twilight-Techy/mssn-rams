@@ -77,6 +77,14 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
                                 <label>Department</label>
                                 <select name="department" required defaultValue={user?.department || ""} title="Select Department">
                                     <option value="" disabled>Select Department</option>
+                                    <optgroup label="Faculty of Engineering">
+                                        <option value="Electronics and Computer Engineering">Electronics &amp; Computer Eng.</option>
+                                        <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                        <option value="Chemical Engineering">Chemical Engineering</option>
+                                        <option value="Aerospace Engineering">Aerospace Engineering</option>
+                                        <option value="Civil Engineering">Civil Engineering</option>
+                                        <option value="Industrial and Systems Engineering">Industrial &amp; Systems Eng.</option>
+                                    </optgroup>
                                     <optgroup label="School of Agriculture">
                                         <option value="Animal Science">Animal Science</option>
                                         <option value="Crop Production">Crop Production</option>
@@ -92,14 +100,6 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
                                         <option value="Estate Management">Estate Management</option>
                                         <option value="Environmental Management">Environmental Management</option>
                                         <option value="Architecture">Architecture</option>
-                                    </optgroup>
-                                    <optgroup label="Faculty of Engineering">
-                                        <option value="Electronics and Computer Engineering">Electronics &amp; Computer Eng.</option>
-                                        <option value="Mechanical Engineering">Mechanical Engineering</option>
-                                        <option value="Chemical Engineering">Chemical Engineering</option>
-                                        <option value="Aerospace Engineering">Aerospace Engineering</option>
-                                        <option value="Civil Engineering">Civil Engineering</option>
-                                        <option value="Industrial and Systems Engineering">Industrial &amp; Systems Eng.</option>
                                     </optgroup>
                                     <optgroup label="Other">
                                         <option value="Diploma">Diploma</option>

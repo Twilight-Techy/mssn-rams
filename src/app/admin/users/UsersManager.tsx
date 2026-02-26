@@ -1,15 +1,28 @@
 'use client'
 
 import { useState } from 'react';
-import { updateUserRole } from '@/app/actions/userActions';
-import { Search } from 'lucide-react';
+import { updateUserRole, toggleBlacklist } from '@/app/actions/userActions';
+import { Search, Ban, ShieldCheck } from 'lucide-react';
 
-export default function UsersManager({ initialUsers }: { initialUsers: { id: string, email: string, firstName: string | null, lastName: string | null, role: string, matricNumber: string | null, level: string | null, category: string | null }[] }) {
+type User = {
+    id: string;
+    email: string;
+    firstName: string | null;
+    lastName: string | null;
+    role: string;
+    matricNumber: string | null;
+    level: string | null;
+    category: string | null;
+    isBlacklisted: boolean;
+};
+
+export default function UsersManager({ initialUsers }: { initialUsers: User[] }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
+    const [users, setUsers] = useState(initialUsers);
 
     // Client-side filtering for quick response
-    const filteredUsers = initialUsers.filter(u =>
+    const filteredUsers = users.filter(u =>
         (u.firstName + ' ' + u.lastName).toLowerCase().includes(searchQuery.toLowerCase()) ||
         (u.email || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
         (u.matricNumber || '').toLowerCase().includes(searchQuery.toLowerCase())
@@ -18,6 +31,15 @@ export default function UsersManager({ initialUsers }: { initialUsers: { id: str
     const handleRoleChange = async (id: string, role: string) => {
         setLoadingMap(prev => ({ ...prev, [id]: true }));
         await updateUserRole(id, role as "super_admin" | "admin" | "coordinator" | "user");
+        setLoadingMap(prev => ({ ...prev, [id]: false }));
+    };
+
+    const handleBlacklistToggle = async (id: string, currentStatus: boolean) => {
+        setLoadingMap(prev => ({ ...prev, [id]: true }));
+        const result = await toggleBlacklist(id, !currentStatus);
+        if (result?.success) {
+            setUsers(prev => prev.map(u => u.id === id ? { ...u, isBlacklisted: !currentStatus } : u));
+        }
         setLoadingMap(prev => ({ ...prev, [id]: false }));
     };
 
@@ -45,14 +67,15 @@ export default function UsersManager({ initialUsers }: { initialUsers: { id: str
                             <th>Name</th>
                             <th>Email</th>
                             <th>Matric/Level</th>
+                            <th>Status</th>
                             <th className="text-right">Role</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filteredUsers.length === 0 ? (
-                            <tr><td colSpan={4} className="p-12 text-center text-secondary">No users found.</td></tr>
+                            <tr><td colSpan={5} className="p-12 text-center text-secondary">No users found.</td></tr>
                         ) : filteredUsers.map(user => (
-                            <tr key={user.id}>
+                            <tr key={user.id} className={user.isBlacklisted ? 'blacklisted-row' : ''}>
                                 <td data-label="Name" className="font-medium">
                                     {user.firstName} {user.lastName} <br />
                                     <span className="text-xs text-secondary">{user.category ? user.category.charAt(0).toUpperCase() + user.category.slice(1) : ''}</span>
@@ -61,6 +84,20 @@ export default function UsersManager({ initialUsers }: { initialUsers: { id: str
                                 <td data-label="Matric/Level">
                                     <div className="text-sm">{user.matricNumber || 'N/A'}</div>
                                     <div className="text-xs text-secondary">{user.level ? `${user.level}L` : ''}</div>
+                                </td>
+                                <td data-label="Status">
+                                    <button
+                                        onClick={() => handleBlacklistToggle(user.id, user.isBlacklisted)}
+                                        disabled={loadingMap[user.id]}
+                                        className={`btn-sm flex items-center gap-1 ${user.isBlacklisted ? 'btn-blacklisted' : 'btn-active-user'}`}
+                                        title={user.isBlacklisted ? 'Unblacklist user' : 'Blacklist user'}
+                                    >
+                                        {loadingMap[user.id] ? '...' : user.isBlacklisted ? (
+                                            <><Ban size={14} /> Blacklisted</>
+                                        ) : (
+                                            <><ShieldCheck size={14} /> Active</>
+                                        )}
+                                    </button>
                                 </td>
                                 <td data-label="" className="text-right">
                                     <select

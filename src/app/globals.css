@@ -659,6 +659,10 @@ label {
   background-color: rgba(56, 161, 105, 0.05);
 }
 
+.bg-danger-light {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
 .bg-mssn-green-10 {
   background-color: rgba(11, 81, 42, 0.1);
 }
@@ -1088,6 +1092,42 @@ label {
   justify-content: center;
   align-items: center;
   width: 100%;
+}
+
+/* Blacklist Feature */
+.btn-sm {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-active-user {
+  background: rgba(22, 134, 72, 0.1);
+  color: var(--mssn-green);
+}
+
+.btn-active-user:hover {
+  background: rgba(220, 53, 69, 0.1);
+  color: var(--danger);
+}
+
+.btn-blacklisted {
+  background: rgba(220, 53, 69, 0.1);
+  color: var(--danger);
+}
+
+.btn-blacklisted:hover {
+  background: rgba(22, 134, 72, 0.1);
+  color: var(--mssn-green);
+}
+
+.blacklisted-row {
+  background: rgba(220, 53, 69, 0.04) !important;
 }
 
 /* Modal Overlay */

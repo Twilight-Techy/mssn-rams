@@ -7,6 +7,7 @@ import Image from "next/image";
 import SignOutButton from "@/components/SignOutButton";
 import QRScanner from "@/components/QRScanner";
 import DeepLinkScanner from "@/components/DeepLinkScanner";
+import { Ban } from "lucide-react";
 import { Suspense } from "react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
@@ -32,7 +33,6 @@ export default async function DashboardPage() {
             </div>
         );
     }
-
     return (
         <div className="container pt-8">
             <Suspense fallback={null}>

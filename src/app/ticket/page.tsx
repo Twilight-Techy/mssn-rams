@@ -8,15 +8,19 @@ export default async function TicketPage() {
 
     if (!ticket) {
         return (
-            <div className="container pt-16 text-center">
-                <div className="glass-card p-12 max-w-[500px] mx-auto">
-                    <h2 className="mb-4">No Active Ticket Found</h2>
-                    <p className="text-secondary mb-8">
-                        You haven&apos;t marked attendance for the current event, or there is no active event right now.
-                    </p>
-                    <Link href="/dashboard" className="btn-primary flex items-center justify-center gap-2">
-                        <ArrowLeft size={18} /> Return to Dashboard
+            <div className="container">
+                <div className="pt-8 pb-2">
+                    <Link href="/dashboard" className="inline-flex items-center text-secondary no-underline font-medium gap-2">
+                        <ArrowLeft size={18} /> Dashboard
                     </Link>
+                </div>
+                <div className="ticket-page">
+                    <div className="glass-card p-12 max-w-[500px] mx-auto text-center">
+                        <h2 className="mb-4">No Active Ticket</h2>
+                        <p className="text-secondary mb-0">
+                            You haven&apos;t marked attendance for the current event, or there is no active event right now.
+                        </p>
+                    </div>
                 </div>
             </div>
         );

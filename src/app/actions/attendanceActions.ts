@@ -34,13 +34,15 @@ export async function getLiveAttendance(searchQuery?: string) {
         checkInTime: attendanceTable.checkInTime,
         servedAt: attendanceTable.servedAt,
         user: {
+            id: usersTable.id,
             firstName: usersTable.firstName,
             lastName: usersTable.lastName,
             matricNumber: usersTable.matricNumber,
             gender: usersTable.gender,
             level: usersTable.level,
             isMuslim: usersTable.isMuslim,
-            category: usersTable.category
+            category: usersTable.category,
+            isBlacklisted: usersTable.isBlacklisted
         }
     })
         .from(attendanceTable)

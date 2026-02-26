@@ -20,6 +20,7 @@ export const usersTable = pgTable("users", {
         ]
     }),
     phoneNumber: text("phone_number"),
+    isBlacklisted: boolean("is_blacklisted").default(false).notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

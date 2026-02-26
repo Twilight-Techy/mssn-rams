@@ -41,3 +41,21 @@ export async function updateUserRole(userId: string, newRole: "super_admin" | "a
         return { error: "Failed to update role" };
     }
 }
+
+export async function toggleBlacklist(userId: string, blacklist: boolean) {
+    const session = await getServerSession(authOptions);
+    const role = (session?.user as { role?: string })?.role;
+    if (!session?.user?.email || !['super_admin', 'admin', 'coordinator'].includes(role || '')) {
+        return { error: "Unauthorized" };
+    }
+
+    try {
+        await db.update(usersTable)
+            .set({ isBlacklisted: blacklist })
+            .where(eq(usersTable.id, userId));
+        revalidatePath("/admin/users");
+        return { success: true };
+    } catch {
+        return { error: "Failed to update blacklist status" };
+    }
+}

@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import { toggleServedStatus, searchUsersForAttendance, markManualAttendance, registerOfflineUser } from '@/app/actions/attendanceActions';
-import { Search, Undo2, Check, UserPlus, X, AlertCircle } from 'lucide-react';
+import { toggleBlacklist } from '@/app/actions/userActions';
+import { Search, Undo2, Check, UserPlus, X, AlertCircle, Ban, ShieldCheck } from 'lucide-react';
 
 
-export default function LiveFeed({ initialRecords }: { initialRecords: { id: string, status: string, checkInTime: string, servedAt?: string | null, user: { firstName: string | null, lastName: string | null, matricNumber: string | null, gender: string | null, level: string | null, isMuslim: boolean | null, category: string | null } }[] }) {
+export default function LiveFeed({ initialRecords }: { initialRecords: { id: string, status: string, checkInTime: string, servedAt?: string | null, user: { id: string, firstName: string | null, lastName: string | null, matricNumber: string | null, gender: string | null, level: string | null, isMuslim: boolean | null, category: string | null, isBlacklisted?: boolean } }[] }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState<'all' | 'marked' | 'served'>('all');
     const [filterCategory, setFilterCategory] = useState<'all' | 'muslim_student' | 'non_muslim_student' | 'others'>('all');
@@ -28,6 +29,12 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
         await toggleServedStatus(id, currentStatus);
         setLoadingMap(prev => ({ ...prev, [id]: false }));
         // router.refresh() occurs implicitly from server action revalidatePath
+    };
+
+    const handleBlacklistToggle = async (userId: string, currentStatus: boolean) => {
+        setLoadingMap(prev => ({ ...prev, [userId + '_bl']: true }));
+        await toggleBlacklist(userId, !currentStatus);
+        setLoadingMap(prev => ({ ...prev, [userId + '_bl']: false }));
     };
 
     // Manual Attendance State
@@ -145,16 +152,17 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
                     <thead>
                         <tr>
                             <th>Attendee</th>
-                            <th>Matric & Level</th>
+                            <th>Matric/Level</th>
                             <th>Check-in</th>
+                            <th>Status</th>
                             <th className="text-right">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filteredRecords.length === 0 ? (
-                            <tr><td colSpan={4} className="p-8 text-center text-secondary">No attendees found.</td></tr>
+                            <tr><td colSpan={5} className="p-8 text-center text-secondary">No attendees found.</td></tr>
                         ) : filteredRecords.map(record => (
-                            <tr key={record.id} className={record.status === 'served' ? 'bg-black-02' : 'bg-transparent'}>
+                            <tr key={record.id} className={record.user.isBlacklisted ? 'blacklisted-row' : record.status === 'served' ? 'bg-black-02' : 'bg-transparent'}>
                                 <td data-label="Attendee">
                                     <div className="font-semibold">{record.user.firstName} {record.user.lastName}</div>
                                     <div className="text-sm text-secondary">{record.user.gender ? record.user.gender.charAt(0).toUpperCase() + record.user.gender.slice(1) : ''}</div>
@@ -165,6 +173,20 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
                                 </td>
                                 <td data-label="Check-in" className="text-secondary text-sm">
                                     {new Date(record.checkInTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </td>
+                                <td data-label="Status">
+                                    <button
+                                        onClick={() => handleBlacklistToggle(record.user.id, record.user.isBlacklisted!)}
+                                        disabled={loadingMap[record.user.id + '_bl']}
+                                        className={`btn-sm flex items-center gap-1 ${record.user.isBlacklisted ? 'btn-blacklisted' : 'btn-active-user'}`}
+                                        title={record.user.isBlacklisted ? 'Unblacklist user' : 'Blacklist user'}
+                                    >
+                                        {loadingMap[record.user.id + '_bl'] ? '...' : record.user.isBlacklisted ? (
+                                            <><Ban size={14} /> Blacklisted</>
+                                        ) : (
+                                            <><ShieldCheck size={14} /> Active</>
+                                        )}
+                                    </button>
                                 </td>
                                 <td data-label="" className="text-right">
                                     {record.status === 'marked' ? (
