@@ -21,10 +21,10 @@ export async function getUsers(searchQuery?: string) {
                 like(usersTable.email, `%${searchQuery}%`),
                 like(usersTable.matricNumber, `%${searchQuery}%`)
             )
-        ).limit(50);
+        );
     }
 
-    return await baseQuery.limit(50); // Limit for performance
+    return await baseQuery; // Server-side pagination is omitted in favor of full client-side search for small datasets.
 }
 
 export async function updateUserRole(userId: string, newRole: "super_admin" | "admin" | "coordinator" | "user") {

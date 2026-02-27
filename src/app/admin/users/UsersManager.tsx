@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { updateUserRole, toggleBlacklist, updateUserDetails, deleteUser } from '@/app/actions/userActions';
 import { Search, Ban, ShieldCheck, Edit, Trash2, X } from 'lucide-react';
 
@@ -33,6 +34,12 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
     // Delete Modal State
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [userToDelete, setUserToDelete] = useState<User | null>(null);
+
+    // Portal Mount State
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     // Client-side filtering for quick response
     const filteredUsers = users.filter(u =>
@@ -209,8 +216,8 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
             </div>
 
             {/* Edit User Modal */}
-            {isEditModalOpen && editingUser && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            {mounted && isEditModalOpen && editingUser && createPortal(
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
                     <div className="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
                         <div className="p-6 border-b border-black-05 flex justify-between items-center">
                             <div>
@@ -292,11 +299,12 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
                             </form>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
             {/* Delete Confirmation Modal */}
-            {isDeleteModalOpen && userToDelete && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            {mounted && isDeleteModalOpen && userToDelete && createPortal(
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
                     <div className="bg-white rounded-xl shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
                         <div className="p-6 text-center">
                             <div className="w-16 h-16 bg-error-light text-error rounded-full flex items-center justify-center mx-auto mb-4">
@@ -317,7 +325,8 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </div>
     );
