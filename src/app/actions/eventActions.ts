@@ -49,5 +49,5 @@ export async function toggleEventStatus(eventId: string, currentStatus: boolean)
 }
 
 export async function getEvents() {
-    return await db.select().from(eventsTable).orderBy(desc(eventsTable.date));
+    return await db.select().from(eventsTable).orderBy(desc(eventsTable.createdAt));
 }
