@@ -30,6 +30,10 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
         firstName: '', lastName: '', matricNumber: '', gender: 'Brother', classification: 'full_time_undergraduate', level: '100', category: 'student'
     });
 
+    // Delete Modal State
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [userToDelete, setUserToDelete] = useState<User | null>(null);
+
     // Client-side filtering for quick response
     const filteredUsers = users.filter(u =>
         (u.firstName + ' ' + u.lastName).toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -55,13 +59,21 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
         setLoadingMap(prev => ({ ...prev, [id]: false }));
     };
 
-    const handleDeleteUser = async (id: string) => {
-        if (!confirm("Are you sure you want to completely delete this user? This cannot be undone and will fail if they have registered for events.")) return;
+    const openDeleteModal = (user: User) => {
+        setUserToDelete(user);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!userToDelete) return;
+        const id = userToDelete.id;
 
         setLoadingMap(prev => ({ ...prev, [id + '_del']: true }));
         const result = await deleteUser(id);
         if (result?.success) {
             setUsers(prev => prev.filter(u => u.id !== id));
+            setIsDeleteModalOpen(false);
+            setUserToDelete(null);
         } else {
             alert(result?.error || 'Failed to delete user.');
         }
@@ -181,7 +193,7 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
                                             <Edit size={16} />
                                         </button>
                                         <button
-                                            onClick={() => handleDeleteUser(user.id)}
+                                            onClick={() => openDeleteModal(user)}
                                             disabled={loadingMap[user.id + '_del']}
                                             className="p-2 text-error bg-error-light hover:bg-error/20 rounded-lg transition-colors"
                                             title="Delete User"
@@ -278,6 +290,31 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
                                     </button>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {/* Delete Confirmation Modal */}
+            {isDeleteModalOpen && userToDelete && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-xl shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
+                        <div className="p-6 text-center">
+                            <div className="w-16 h-16 bg-error-light text-error rounded-full flex items-center justify-center mx-auto mb-4">
+                                <Trash2 size={32} />
+                            </div>
+                            <h2 className="text-xl font-bold text-mssn-green-dark mb-2">Delete User?</h2>
+                            <p className="text-sm text-secondary mb-6">
+                                Are you sure you want to completely delete <strong>{userToDelete.firstName} {userToDelete.lastName}</strong>? This action cannot be undone.
+                            </p>
+
+                            <div className="flex gap-3 justify-center w-full">
+                                <button type="button" onClick={() => setIsDeleteModalOpen(false)} className="btn-outline border-black-10 text-secondary px-6 w-full flex-1">
+                                    Cancel
+                                </button>
+                                <button type="button" onClick={confirmDelete} disabled={loadingMap[userToDelete.id + '_del']} className="bg-error hover:bg-error/90 text-white rounded-lg px-6 w-full flex-1 font-semibold transition-colors">
+                                    {loadingMap[userToDelete.id + '_del'] ? 'Deleting...' : 'Yes, Delete'}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

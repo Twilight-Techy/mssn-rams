@@ -34,10 +34,10 @@ export const eventsTable = pgTable("events", {
 
 export const attendanceTable = pgTable("attendance", {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: uuid("user_id").notNull().references(() => usersTable.id),
-    eventId: uuid("event_id").notNull().references(() => eventsTable.id),
+    userId: uuid("user_id").notNull().references(() => usersTable.id, { onDelete: "cascade" }),
+    eventId: uuid("event_id").notNull().references(() => eventsTable.id, { onDelete: "cascade" }),
     status: text("status", { enum: ["marked", "served"] }).notNull().default("marked"),
     checkInTime: timestamp("check_in_time").defaultNow().notNull(),
     servedAt: timestamp("served_at"),
-    servedBy: uuid("served_by").references(() => usersTable.id),
+    servedBy: uuid("served_by").references(() => usersTable.id, { onDelete: "set null" }),
 });
