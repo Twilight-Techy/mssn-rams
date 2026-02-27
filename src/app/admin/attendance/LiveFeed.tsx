@@ -101,7 +101,7 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
 
     const getDescriptiveCount = () => {
         const count = filteredRecords.length;
-        let noun = 'records';
+        let noun = 'Users';
         if (filterCategory === 'muslim_student') {
             if (filterGender === 'brother') noun = 'Muslim Brothers';
             else if (filterGender === 'sister') noun = 'Muslim Sisters';
