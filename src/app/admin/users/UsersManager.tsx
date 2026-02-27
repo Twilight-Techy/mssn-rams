@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react';
-import { updateUserRole, toggleBlacklist } from '@/app/actions/userActions';
-import { Search, Ban, ShieldCheck } from 'lucide-react';
+import { updateUserRole, toggleBlacklist, updateUserDetails, deleteUser } from '@/app/actions/userActions';
+import { Search, Ban, ShieldCheck, Edit, Trash2, X } from 'lucide-react';
 
 type User = {
     id: string;
@@ -15,12 +15,20 @@ type User = {
     classification: string | null;
     category: string | null;
     isBlacklisted: boolean;
+    gender?: string | null;
 };
 
 export default function UsersManager({ initialUsers }: { initialUsers: User[] }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
     const [users, setUsers] = useState(initialUsers);
+
+    // Edit Modal State
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editingUser, setEditingUser] = useState<User | null>(null);
+    const [editForm, setEditForm] = useState({
+        firstName: '', lastName: '', matricNumber: '', gender: 'Brother', classification: 'full_time_undergraduate', level: '100', category: 'student'
+    });
 
     // Client-side filtering for quick response
     const filteredUsers = users.filter(u =>
@@ -47,6 +55,49 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
         setLoadingMap(prev => ({ ...prev, [id]: false }));
     };
 
+    const handleDeleteUser = async (id: string) => {
+        if (!confirm("Are you sure you want to completely delete this user? This cannot be undone and will fail if they have registered for events.")) return;
+
+        setLoadingMap(prev => ({ ...prev, [id + '_del']: true }));
+        const result = await deleteUser(id);
+        if (result?.success) {
+            setUsers(prev => prev.filter(u => u.id !== id));
+        } else {
+            alert(result?.error || 'Failed to delete user.');
+        }
+        setLoadingMap(prev => ({ ...prev, [id + '_del']: false }));
+    };
+
+    const openEditModal = (user: User) => {
+        setEditingUser(user);
+        setEditForm({
+            firstName: user.firstName || '',
+            lastName: user.lastName || '',
+            matricNumber: user.matricNumber || '',
+            gender: user.gender || 'Brother',
+            classification: user.classification || 'full_time_undergraduate',
+            level: user.level || '100',
+            category: user.category || 'student'
+        });
+        setIsEditModalOpen(true);
+    };
+
+    const handleEditSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!editingUser) return;
+
+        setLoadingMap(prev => ({ ...prev, [editingUser.id + '_edit']: true }));
+        const result = await updateUserDetails(editingUser.id, editForm);
+
+        if (result?.success) {
+            setUsers(prev => prev.map(u => u.id === editingUser.id ? { ...u, ...editForm } : u));
+            setIsEditModalOpen(false);
+        } else {
+            alert(result?.error || 'Failed to update user details.');
+        }
+        setLoadingMap(prev => ({ ...prev, [editingUser.id + '_edit']: false }));
+    };
+
     return (
         <div>
             <div className="flex justify-between items-center gap-4 mb-8 admin-header">
@@ -71,8 +122,8 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
                             <th>Name</th>
                             <th>Email</th>
                             <th>Matric/Class</th>
-                            <th>Status</th>
-                            <th className="text-right">Role</th>
+                            <th>Status & Role</th>
+                            <th className="text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -92,39 +143,145 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
                                         {user.level ? ` (${user.level}${user.level.includes('Diploma') ? '' : 'L'})` : ''}
                                     </div>
                                 </td>
-                                <td data-label="Status">
-                                    <button
-                                        onClick={() => handleBlacklistToggle(user.id, user.isBlacklisted)}
-                                        disabled={loadingMap[user.id]}
-                                        className={`btn-sm flex items-center gap-1 ${user.isBlacklisted ? 'btn-blacklisted' : 'btn-active-user'}`}
-                                        title={user.isBlacklisted ? 'Unblacklist user' : 'Blacklist user'}
-                                    >
-                                        {loadingMap[user.id] ? '...' : user.isBlacklisted ? (
-                                            <><Ban size={14} /> Blacklisted</>
-                                        ) : (
-                                            <><ShieldCheck size={14} /> Active</>
-                                        )}
-                                    </button>
+                                <td data-label="Status & Role">
+                                    <div className="flex flex-col gap-2">
+                                        <button
+                                            onClick={() => handleBlacklistToggle(user.id, user.isBlacklisted)}
+                                            disabled={loadingMap[user.id]}
+                                            className={`btn-sm flex items-center justify-center gap-1 ${user.isBlacklisted ? 'btn-blacklisted' : 'btn-active-user'}`}
+                                            title={user.isBlacklisted ? 'Unblacklist user' : 'Blacklist user'}
+                                        >
+                                            {loadingMap[user.id] ? '...' : user.isBlacklisted ? (
+                                                <><Ban size={14} /> Blacklisted</>
+                                            ) : (
+                                                <><ShieldCheck size={14} /> Active</>
+                                            )}
+                                        </button>
+                                        <select
+                                            title={`Change role for ${user.firstName}`}
+                                            value={user.role}
+                                            onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                                            disabled={loadingMap[user.id]}
+                                            className="py-1 px-2 rounded-md border border-gray font-medium text-xs bg-white text-primary outline-none focus:border-mssn-green"
+                                        >
+                                            <option value="user">USER</option>
+                                            <option value="coordinator">COORDINATOR</option>
+                                            <option value="admin">ADMIN</option>
+                                            <option value="super_admin">SUPER ADMIN</option>
+                                        </select>
+                                    </div>
                                 </td>
-                                <td data-label="" className="text-right">
-                                    <select
-                                        title={`Change role for ${user.firstName}`}
-                                        value={user.role}
-                                        onChange={(e) => handleRoleChange(user.id, e.target.value)}
-                                        disabled={loadingMap[user.id]}
-                                        className="py-1.5 px-3 rounded-lg border border-gray font-medium text-sm bg-white text-primary outline-none focus:border-mssn-green"
-                                    >
-                                        <option value="user">USER</option>
-                                        <option value="coordinator">COORDINATOR</option>
-                                        <option value="admin">ADMIN</option>
-                                        <option value="super_admin">SUPER ADMIN</option>
-                                    </select>
+                                <td data-label="Actions" className="text-right">
+                                    <div className="flex items-center justify-end gap-2">
+                                        <button
+                                            onClick={() => openEditModal(user)}
+                                            className="p-2 text-mssn-green bg-mssn-green-10 hover:bg-mssn-green/20 rounded-lg transition-colors"
+                                            title="Edit User"
+                                        >
+                                            <Edit size={16} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteUser(user.id)}
+                                            disabled={loadingMap[user.id + '_del']}
+                                            className="p-2 text-error bg-error-light hover:bg-error/20 rounded-lg transition-colors"
+                                            title="Delete User"
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+
+            {/* Edit User Modal */}
+            {isEditModalOpen && editingUser && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
+                        <div className="p-6 border-b border-black-05 flex justify-between items-center">
+                            <div>
+                                <h2 className="text-xl font-bold text-mssn-green-dark">Edit User Profile</h2>
+                                <p className="text-sm text-secondary">{editingUser.email}</p>
+                            </div>
+                            <button onClick={() => setIsEditModalOpen(false)} className="text-secondary hover:text-black transition-colors" title="Close Modal" aria-label="Close Modal">
+                                <X size={24} />
+                            </button>
+                        </div>
+                        <div className="p-6 bg-glass-bg">
+                            <form onSubmit={handleEditSubmit} className="flex flex-col gap-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="flex flex-col gap-1">
+                                        <label className="text-sm font-medium text-secondary">First Name</label>
+                                        <input required type="text" value={editForm.firstName} onChange={e => setEditForm({ ...editForm, firstName: e.target.value })} className="w-full" title="First Name" placeholder="First Name" />
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <label className="text-sm font-medium text-secondary">Last Name</label>
+                                        <input required type="text" value={editForm.lastName} onChange={e => setEditForm({ ...editForm, lastName: e.target.value })} className="w-full" title="Last Name" placeholder="Last Name" />
+                                    </div>
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                    <label className="text-sm font-medium text-secondary">Matric Number</label>
+                                    <input type="text" value={editForm.matricNumber} onChange={e => setEditForm({ ...editForm, matricNumber: e.target.value })} className="w-full" title="Matric Number" placeholder="Matric Number" />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="flex flex-col gap-1">
+                                        <label className="text-sm font-medium text-secondary">Category</label>
+                                        <select value={editForm.category} onChange={e => setEditForm({ ...editForm, category: e.target.value })} className="w-full p-3 rounded-lg border border-black-10 bg-white" title="Category" aria-label="Category">
+                                            <option value="student">Student</option>
+                                            <option value="staff">Staff</option>
+                                            <option value="guest">Guest</option>
+                                        </select>
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <label className="text-sm font-medium text-secondary">Gender</label>
+                                        <select value={editForm.gender} onChange={e => setEditForm({ ...editForm, gender: e.target.value })} className="w-full p-3 rounded-lg border border-black-10 bg-white" title="Gender" aria-label="Gender">
+                                            <option value="Brother">Brother</option>
+                                            <option value="Sister">Sister</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="flex flex-col gap-1">
+                                        <label className="text-sm font-medium text-secondary">Classification</label>
+                                        <select value={editForm.classification} onChange={e => setEditForm({ ...editForm, classification: e.target.value })} className="w-full p-3 rounded-lg border border-black-10 bg-white" title="Classification" aria-label="Classification">
+                                            <option value="full_time_undergraduate">Full Time Undergrad</option>
+                                            <option value="diploma">Diploma</option>
+                                            <option value="part_time">Part Time</option>
+                                            <option value="pds">PDS</option>
+                                        </select>
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <label className="text-sm font-medium text-secondary">Level/Year</label>
+                                        <select value={editForm.level} onChange={e => setEditForm({ ...editForm, level: e.target.value })} className="w-full p-3 rounded-lg border border-black-10 bg-white" title="Level/Year" aria-label="Level/Year">
+                                            <option value="100">100 Level</option>
+                                            <option value="200">200 Level</option>
+                                            <option value="300">300 Level</option>
+                                            <option value="400">400 Level</option>
+                                            <option value="500">500 Level</option>
+                                            <option value="600">600 Level</option>
+                                            <option value="ND1">ND1</option>
+                                            <option value="ND2">ND2</option>
+                                            <option value="HND1">HND1</option>
+                                            <option value="HND2">HND2</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="mt-4 flex gap-3 justify-end border-t border-black-10 pt-4">
+                                    <button type="button" onClick={() => setIsEditModalOpen(false)} className="btn-outline border-secondary text-secondary px-6">
+                                        Cancel
+                                    </button>
+                                    <button type="submit" disabled={loadingMap[editingUser.id + '_edit']} className="btn-primary px-8">
+                                        {loadingMap[editingUser.id + '_edit'] ? 'Saving...' : 'Save Changes'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

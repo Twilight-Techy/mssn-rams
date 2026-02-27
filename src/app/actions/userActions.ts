@@ -59,3 +59,39 @@ export async function toggleBlacklist(userId: string, blacklist: boolean) {
         return { error: "Failed to update blacklist status" };
     }
 }
+
+export async function updateUserDetails(userId: string, data: { firstName: string, lastName: string, matricNumber: string, gender: string, classification: string, level: string, category: string }) {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email || (session.user as { role?: string }).role !== 'super_admin') return { error: "Unauthorized" };
+
+    try {
+        await db.update(usersTable)
+            .set({
+                firstName: data.firstName,
+                lastName: data.lastName,
+                matricNumber: data.matricNumber,
+                gender: data.gender ? (data.gender.toLowerCase() as "brother" | "sister") : null,
+                classification: (data.classification as any) || null,
+                level: data.level || null,
+                category: data.category ? (data.category.toLowerCase() as "student" | "others") : null
+            })
+            .where(eq(usersTable.id, userId));
+        revalidatePath("/admin/users");
+        return { success: true };
+    } catch {
+        return { error: "Failed to update user details" };
+    }
+}
+
+export async function deleteUser(userId: string) {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email || (session.user as { role?: string }).role !== 'super_admin') return { error: "Unauthorized" };
+
+    try {
+        await db.delete(usersTable).where(eq(usersTable.id, userId));
+        revalidatePath("/admin/users");
+        return { success: true };
+    } catch {
+        return { error: "Failed to delete user, they might have associated records like tickets or attendance." };
+    }
+}
