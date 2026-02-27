@@ -139,7 +139,7 @@ export async function markManualAttendance(userId: string) {
     }
 }
 
-export async function registerOfflineUser(data: { firstName: string, lastName: string, email: string, matricNumber: string, gender: 'Brother' | 'Sister', level: string }) {
+export async function registerOfflineUser(data: { firstName: string, lastName: string, email: string, matricNumber: string, gender: 'Brother' | 'Sister', classification: string }) {
     const session = await getServerSession(authOptions);
     if (!session?.user?.email || (session.user as { role?: string }).role === 'user') return { error: "Unauthorized" };
 
@@ -160,7 +160,9 @@ export async function registerOfflineUser(data: { firstName: string, lastName: s
                 lastName: data.lastName,
                 matricNumber: data.matricNumber || null,
                 gender: data.gender === 'Brother' ? 'brother' : 'sister',
-                level: data.level || null,
+                classification: (data.classification as any) || null,
+                category: 'student', // Defaulting to student for offline reg since we are asking for classification
+                isMuslim: true // Defaulting to true since it's an MSSN app
             }).returning({ id: usersTable.id });
 
             userId = newUser[0].id;

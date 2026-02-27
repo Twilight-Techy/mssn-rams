@@ -102,13 +102,12 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
     return (
         <div>
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-4">
-                <div className="flex items-baseline gap-3">
-                    <h1 className="text-h1 text-mssn-green-dark">Live Attendance</h1>
-                    <span className="text-sm font-medium bg-black-05 px-3 py-1 rounded-full text-secondary">
+                <h1 className="text-h1 text-mssn-green-dark">Live Attendance</h1>
+
+                <div className="flex flex-col xl:flex-row gap-4 admin-filters items-center">
+                    <span className="text-sm font-semibold bg-mssn-green-10 text-mssn-green px-4 py-2 rounded-lg border border-mssn-green-20 shadow-sm self-start sm:self-auto hidden sm:inline-block">
                         {filteredRecords.length} found
                     </span>
-                </div>
-                <div className="flex flex-col xl:flex-row gap-4 admin-filters">
                     <button
                         onClick={() => setIsModalOpen(true)}
                         className="btn-outline border-mssn-green text-mssn-green py-2 px-4 whitespace-nowrap flex items-center justify-center gap-2"
@@ -161,6 +160,12 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
                         />
                     </div>
                 </div>
+            </div>
+
+            <div className="sm:hidden mb-4 overflow-hidden">
+                <span className="text-sm font-semibold bg-mssn-green-10 text-mssn-green px-4 py-2 rounded-lg border border-mssn-green-20 shadow-sm block w-full text-center">
+                    {filteredRecords.length} records found
+                </span>
             </div>
 
             <div className="glass-card p-0 overflow-hidden table-responsive">
@@ -282,12 +287,11 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
                                                     <option value="Brother">Brother</option>
                                                     <option value="Sister">Sister</option>
                                                 </select>
-                                                <select title="Level" aria-label="Select Level" value={offlineData.level} onChange={e => setOfflineData({ ...offlineData, level: e.target.value })} className="w-full p-3 rounded-lg border border-black-10 bg-transparent text-black">
-                                                    <option value="100">100 Level</option>
-                                                    <option value="200">200 Level</option>
-                                                    <option value="300">300 Level</option>
-                                                    <option value="400">400 Level</option>
-                                                    <option value="500">500 Level</option>
+                                                <select title="Classification" aria-label="Select Classification" value={offlineData.classification} onChange={e => setOfflineData({ ...offlineData, classification: e.target.value })} className="w-full p-3 rounded-lg border border-black-10 bg-transparent text-black">
+                                                    <option value="full_time_undergraduate">Full Time Undergrad</option>
+                                                    <option value="diploma">Diploma</option>
+                                                    <option value="part_time">Part Time</option>
+                                                    <option value="pds">PDS</option>
                                                 </select>
                                             </div>
                                             <button type="submit" disabled={isRegistering} className="btn-primary w-full mt-2">
