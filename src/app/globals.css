@@ -26,7 +26,6 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   background: linear-gradient(135deg, #f8faf9 0%, #e2efe8 100%);
-  overflow-x: hidden;
 }
 
 /* Glassmorphism Card Utility */
