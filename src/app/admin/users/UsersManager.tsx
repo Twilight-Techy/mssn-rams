@@ -217,9 +217,9 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
 
             {/* Edit User Modal */}
             {mounted && isEditModalOpen && editingUser && createPortal(
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-                    <div className="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
-                        <div className="p-6 border-b border-black-05 flex justify-between items-center">
+                <div className="modal-overlay">
+                    <div className="modal-container">
+                        <div className="modal-header">
                             <div>
                                 <h2 className="text-xl font-bold text-mssn-green-dark">Edit User Profile</h2>
                                 <p className="text-sm text-secondary">{editingUser.email}</p>
@@ -228,7 +228,7 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
                                 <X size={24} />
                             </button>
                         </div>
-                        <div className="p-6 bg-glass-bg">
+                        <div className="modal-body">
                             <form onSubmit={handleEditSubmit} className="flex flex-col gap-4">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="flex flex-col gap-1">
@@ -304,9 +304,9 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
             )}
             {/* Delete Confirmation Modal */}
             {mounted && isDeleteModalOpen && userToDelete && createPortal(
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-                    <div className="bg-white rounded-xl shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in duration-200">
-                        <div className="p-6 text-center">
+                <div className="modal-overlay">
+                    <div className="modal-container modal-container-sm">
+                        <div className="modal-body text-center">
                             <div className="w-16 h-16 bg-error-light text-error rounded-full flex items-center justify-center mx-auto mb-4">
                                 <Trash2 size={32} />
                             </div>
