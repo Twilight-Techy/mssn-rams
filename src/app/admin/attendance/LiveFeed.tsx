@@ -99,18 +99,37 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
         }
     };
 
+    const getDescriptiveCount = () => {
+        const count = filteredRecords.length;
+        let noun = 'records';
+        if (filterCategory === 'muslim_student') {
+            if (filterGender === 'brother') noun = 'Muslim Brothers';
+            else if (filterGender === 'sister') noun = 'Muslim Sisters';
+            else noun = 'Muslim Students';
+        } else if (filterCategory === 'others') {
+            if (filterGender === 'brother') noun = 'Male Others';
+            else if (filterGender === 'sister') noun = 'Female Others';
+            else noun = 'Others';
+        } else {
+            if (filterGender === 'brother') noun = 'Brothers';
+            else if (filterGender === 'sister') noun = 'Sisters';
+        }
+
+        let statusStr = 'Checked In';
+        if (filterStatus === 'marked') statusStr = 'To Serve';
+        else if (filterStatus === 'served') statusStr = 'Served';
+
+        return `${count} ${noun} ${statusStr}`;
+    };
+
     return (
         <div>
-            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-4">
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-8">
                 <h1 className="text-h1 text-mssn-green-dark">Live Attendance</h1>
-
-                <div className="flex flex-col xl:flex-row gap-4 admin-filters items-center">
-                    <span className="text-sm font-semibold bg-mssn-green-10 text-mssn-green px-4 py-2 rounded-lg border border-mssn-green-20 shadow-sm self-start sm:self-auto hidden sm:inline-block">
-                        {filteredRecords.length} found
-                    </span>
+                <div className="flex flex-col sm:flex-row gap-4 admin-filters">
                     <button
                         onClick={() => setIsModalOpen(true)}
-                        className="btn-outline border-mssn-green text-mssn-green py-2 px-4 whitespace-nowrap flex items-center justify-center gap-2"
+                        className="btn-outline border-mssn-green text-mssn-green py-2 px-4 whitespace-nowrap flex items-center gap-2"
                     >
                         <UserPlus size={18} /> Manual Check-in
                     </button>
@@ -149,22 +168,22 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
                             <option value="others">Others (Staff/Guest)</option>
                         </select>
                     </div>
-                    <div className="relative w-full sm:w-300">
+                    <div className="relative w-full sm:w-300 xl:w-auto">
                         <Search size={18} className="absolute left-3 top-50 translate-y-50-rev text-secondary" />
                         <input
                             type="text"
                             placeholder="Search Name or Matric..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="pl-10"
+                            className="pl-10 w-full xl:w-full"
                         />
                     </div>
                 </div>
             </div>
 
-            <div className="sm:hidden mb-4 overflow-hidden">
+            <div className="mb-4">
                 <span className="text-sm font-semibold bg-mssn-green-10 text-mssn-green px-4 py-2 rounded-lg border border-mssn-green-20 shadow-sm block w-full text-center">
-                    {filteredRecords.length} records found
+                    {getDescriptiveCount()}
                 </span>
             </div>
 
