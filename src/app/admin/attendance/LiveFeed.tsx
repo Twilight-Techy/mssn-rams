@@ -310,6 +310,7 @@ export default function LiveFeed({ initialRecords }: { initialRecords: { id: str
                                                     <option value="full_time_undergraduate">Full Time Undergrad</option>
                                                     <option value="diploma">Diploma</option>
                                                     <option value="part_time">Part Time</option>
+                                                    <option value="masters">Masters</option>
                                                     <option value="pds">PDS</option>
                                                 </select>
                                             </div>

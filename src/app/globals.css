@@ -47,6 +47,11 @@
   /* 384px */
 }
 
+.modal-btn {
+  padding: 12px;
+  flex: 1;
+}
+
 .modal-header {
   padding: 1.5rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -138,6 +143,44 @@ body {
 
 .btn-outline:hover {
   background: rgba(11, 81, 42, 0.05);
+}
+
+.btn-outline:active {
+  background: rgba(11, 81, 42, 0.1);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #f56565, #e53e3e);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-danger:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(229, 62, 62, 0.4);
+}
+
+.btn-danger:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-danger:disabled {
+  background: #feb2b2;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }
 
 /* Typography tweaks */

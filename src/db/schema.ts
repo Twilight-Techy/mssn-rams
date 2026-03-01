@@ -11,7 +11,7 @@ export const usersTable = pgTable("users", {
     matricNumber: text("matric_number").unique(),
     level: text("level"),
     gender: text("gender", { enum: ["brother", "sister"] }),
-    classification: text("classification", { enum: ["full_time_undergraduate", "diploma", "part_time", "pds"] }),
+    classification: text("classification", { enum: ["full_time_undergraduate", "diploma", "part_time", "pds", "masters"] }),
     department: text("department", {
         enum: [
             "Animal Science", "Crop Production", "Agricultural Economics and Farm Management", "Agricultural Extension",

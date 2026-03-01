@@ -10,7 +10,7 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
     const [userType, setUserType] = useState<'muslim_student' | 'others' | ''>(initialType);
 
     // New Student Classification State
-    const [classification, setClassification] = useState<'full_time_undergraduate' | 'diploma' | 'part_time' | 'pds' | ''>(user?.classification || '');
+    const [classification, setClassification] = useState<'full_time_undergraduate' | 'diploma' | 'part_time' | 'pds' | 'masters' | ''>(user?.classification || '');
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -101,6 +101,7 @@ export default function ProfileCompletionForm({ user }: { user: any }) {
                                 <option value="full_time_undergraduate">Full Time Undergraduate</option>
                                 <option value="diploma">Diploma</option>
                                 <option value="part_time">Part Time</option>
+                                <option value="masters">Masters</option>
                                 <option value="pds">PDS</option>
                             </select>
                         </div>

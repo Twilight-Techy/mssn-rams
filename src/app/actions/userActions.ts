@@ -60,20 +60,31 @@ export async function toggleBlacklist(userId: string, blacklist: boolean) {
     }
 }
 
-export async function updateUserDetails(userId: string, data: { firstName: string, lastName: string, matricNumber: string, gender: string, classification: string, level: string, category: string }) {
+export async function updateUserDetails(userId: string, data: { firstName: string, lastName: string, matricNumber: string, gender: string, classification: string, level: string, category: string, department?: string, phoneNumber?: string }) {
     const session = await getServerSession(authOptions);
     if (!session?.user?.email || (session.user as { role?: string }).role !== 'super_admin') return { error: "Unauthorized" };
+
+    let mappedCategory = data.category;
+    let isMuslim = false;
+
+    if (data.category === 'muslim_student') {
+        mappedCategory = 'student';
+        isMuslim = true;
+    }
 
     try {
         await db.update(usersTable)
             .set({
                 firstName: data.firstName,
                 lastName: data.lastName,
-                matricNumber: data.matricNumber,
+                matricNumber: data.matricNumber || null,
                 gender: data.gender ? (data.gender.toLowerCase() as "brother" | "sister") : null,
                 classification: (data.classification as any) || null,
                 level: data.level || null,
-                category: data.category ? (data.category.toLowerCase() as "student" | "others") : null
+                category: mappedCategory ? (mappedCategory.toLowerCase() as "student" | "others") : null,
+                isMuslim: isMuslim,
+                department: (data.department as any) || null,
+                phoneNumber: data.phoneNumber || null,
             })
             .where(eq(usersTable.id, userId));
         revalidatePath("/admin/users");

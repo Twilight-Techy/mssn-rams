@@ -16,7 +16,10 @@ type User = {
     classification: string | null;
     category: string | null;
     isBlacklisted: boolean;
-    gender?: string | null;
+    gender: string | null;
+    isMuslim: boolean | null;
+    department: string | null;
+    phoneNumber: string | null;
 };
 
 export default function UsersManager({ initialUsers }: { initialUsers: User[] }) {
@@ -28,7 +31,7 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [editingUser, setEditingUser] = useState<User | null>(null);
     const [editForm, setEditForm] = useState({
-        firstName: '', lastName: '', matricNumber: '', gender: 'Brother', classification: 'full_time_undergraduate', level: '100', category: 'student'
+        firstName: '', lastName: '', matricNumber: '', gender: 'brother', classification: 'full_time_undergraduate', level: '100', category: 'muslim_student', department: '', phoneNumber: ''
     });
 
     // Delete Modal State
@@ -89,14 +92,18 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
 
     const openEditModal = (user: User) => {
         setEditingUser(user);
+        const initialCategory = user.category === 'student' && user.isMuslim ? 'muslim_student' : user.category === 'others' ? 'others' : 'muslim_student';
+
         setEditForm({
             firstName: user.firstName || '',
             lastName: user.lastName || '',
             matricNumber: user.matricNumber || '',
-            gender: user.gender || 'Brother',
+            gender: user.gender || 'brother',
             classification: user.classification || 'full_time_undergraduate',
             level: user.level || '100',
-            category: user.category || 'student'
+            category: initialCategory,
+            department: user.department || '',
+            phoneNumber: user.phoneNumber || ''
         });
         setIsEditModalOpen(true);
     };
@@ -240,53 +247,107 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
                                         <input required type="text" value={editForm.lastName} onChange={e => setEditForm({ ...editForm, lastName: e.target.value })} className="w-full" title="Last Name" placeholder="Last Name" />
                                     </div>
                                 </div>
-                                <div className="flex flex-col gap-1">
-                                    <label className="text-sm font-medium text-secondary">Matric Number</label>
-                                    <input type="text" value={editForm.matricNumber} onChange={e => setEditForm({ ...editForm, matricNumber: e.target.value })} className="w-full" title="Matric Number" placeholder="Matric Number" />
-                                </div>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="flex flex-col gap-1">
                                         <label className="text-sm font-medium text-secondary">Category</label>
-                                        <select value={editForm.category} onChange={e => setEditForm({ ...editForm, category: e.target.value })} className="w-full p-3 rounded-lg border border-black-10 bg-white" title="Category" aria-label="Category">
-                                            <option value="student">Student</option>
-                                            <option value="staff">Staff</option>
-                                            <option value="guest">Guest</option>
+                                        <select value={editForm.category} onChange={e => {
+                                            setEditForm({ ...editForm, category: e.target.value });
+                                            if (e.target.value !== 'muslim_student') setEditForm(prev => ({ ...prev, classification: '', department: '', level: '' }));
+                                        }} className="w-full p-3 rounded-lg border border-black-10 bg-white" title="Category" aria-label="Category">
+                                            <option value="muslim_student">Muslim Student</option>
+                                            <option value="others">Others (Staff, Guest, Non-Muslim)</option>
                                         </select>
                                     </div>
                                     <div className="flex flex-col gap-1">
                                         <label className="text-sm font-medium text-secondary">Gender</label>
                                         <select value={editForm.gender} onChange={e => setEditForm({ ...editForm, gender: e.target.value })} className="w-full p-3 rounded-lg border border-black-10 bg-white" title="Gender" aria-label="Gender">
-                                            <option value="Brother">Brother</option>
-                                            <option value="Sister">Sister</option>
+                                            <option value="brother">Brother (Male)</option>
+                                            <option value="sister">Sister (Female)</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="flex flex-col gap-1">
-                                        <label className="text-sm font-medium text-secondary">Classification</label>
-                                        <select value={editForm.classification} onChange={e => setEditForm({ ...editForm, classification: e.target.value })} className="w-full p-3 rounded-lg border border-black-10 bg-white" title="Classification" aria-label="Classification">
-                                            <option value="full_time_undergraduate">Full Time Undergrad</option>
-                                            <option value="diploma">Diploma</option>
-                                            <option value="part_time">Part Time</option>
-                                            <option value="pds">PDS</option>
-                                        </select>
+                                        <label className="text-sm font-medium text-secondary">Phone Number</label>
+                                        <input type="tel" value={editForm.phoneNumber} onChange={e => setEditForm({ ...editForm, phoneNumber: e.target.value })} className="w-full" title="Phone Number" placeholder="08000000000" />
                                     </div>
                                     <div className="flex flex-col gap-1">
-                                        <label className="text-sm font-medium text-secondary">Level/Year</label>
-                                        <select value={editForm.level} onChange={e => setEditForm({ ...editForm, level: e.target.value })} className="w-full p-3 rounded-lg border border-black-10 bg-white" title="Level/Year" aria-label="Level/Year">
-                                            <option value="100">100 Level</option>
-                                            <option value="200">200 Level</option>
-                                            <option value="300">300 Level</option>
-                                            <option value="400">400 Level</option>
-                                            <option value="500">500 Level</option>
-                                            <option value="600">600 Level</option>
-                                            <option value="ND1">ND1</option>
-                                            <option value="ND2">ND2</option>
-                                            <option value="HND1">HND1</option>
-                                            <option value="HND2">HND2</option>
-                                        </select>
+                                        <label className="text-sm font-medium text-secondary">Matric Number</label>
+                                        <input type="text" value={editForm.matricNumber} onChange={e => setEditForm({ ...editForm, matricNumber: e.target.value })} className="w-full" title="Matric Number" placeholder="Matric Number" />
                                     </div>
                                 </div>
+
+                                {editForm.category === 'muslim_student' && (
+                                    <>
+                                        <div className="flex flex-col gap-1">
+                                            <label className="text-sm font-medium text-secondary">Classification</label>
+                                            <select value={editForm.classification} onChange={e => setEditForm({ ...editForm, classification: e.target.value })} className="w-full p-3 rounded-lg border border-black-10 bg-white" title="Classification" aria-label="Classification">
+                                                <option value="" disabled>Select Classification</option>
+                                                <option value="full_time_undergraduate">Full Time Undergraduate</option>
+                                                <option value="diploma">Diploma</option>
+                                                <option value="part_time">Part Time</option>
+                                                <option value="masters">Masters</option>
+                                                <option value="pds">PDS</option>
+                                            </select>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            {(editForm.classification === 'full_time_undergraduate' || editForm.classification === 'diploma') && (
+                                                <div className="flex flex-col gap-1">
+                                                    <label className="text-sm font-medium text-secondary">Level/Year</label>
+                                                    <select value={editForm.level} onChange={e => setEditForm({ ...editForm, level: e.target.value })} className="w-full p-3 rounded-lg border border-black-10 bg-white" title="Level/Year" aria-label="Level/Year">
+                                                        <option value="" disabled>Select Level</option>
+                                                        {editForm.classification === 'full_time_undergraduate' ? (
+                                                            <>
+                                                                <option value="100">100 Level</option>
+                                                                <option value="200">200 Level</option>
+                                                                <option value="300">300 Level</option>
+                                                                <option value="400">400 Level</option>
+                                                                <option value="500">500 Level</option>
+                                                            </>
+                                                        ) : editForm.classification === 'diploma' ? (
+                                                            <>
+                                                                <option value="Diploma I">Diploma I</option>
+                                                                <option value="Diploma II">Diploma II</option>
+                                                            </>
+                                                        ) : null}
+                                                    </select>
+                                                </div>
+                                            )}
+                                            {editForm.classification === 'full_time_undergraduate' && (
+                                                <div className="flex flex-col gap-1">
+                                                    <label className="text-sm font-medium text-secondary">Department</label>
+                                                    <select value={editForm.department} onChange={e => setEditForm({ ...editForm, department: e.target.value })} className="w-full p-3 rounded-lg border border-black-10 bg-white" title="Department" aria-label="Department">
+                                                        <option value="" disabled>Select Department</option>
+                                                        <optgroup label="Faculty of Engineering">
+                                                            <option value="Electronics and Computer Engineering">Electronics &amp; Computer Eng.</option>
+                                                            <option value="Mechanical Engineering">Mechanical Engineering</option>
+                                                            <option value="Chemical Engineering">Chemical Engineering</option>
+                                                            <option value="Aerospace Engineering">Aerospace Engineering</option>
+                                                            <option value="Civil Engineering">Civil Engineering</option>
+                                                            <option value="Industrial and Systems Engineering">Industrial &amp; Systems Eng.</option>
+                                                        </optgroup>
+                                                        <optgroup label="School of Agriculture">
+                                                            <option value="Animal Science">Animal Science</option>
+                                                            <option value="Crop Production">Crop Production</option>
+                                                            <option value="Agricultural Economics and Farm Management">Agric. Economics &amp; Farm Mgmt</option>
+                                                            <option value="Agricultural Extension">Agricultural Extension</option>
+                                                        </optgroup>
+                                                        <optgroup label="Faculty of Environmental Science">
+                                                            <option value="Quantity Surveying">Quantity Surveying</option>
+                                                            <option value="Fine Art">Fine Art</option>
+                                                            <option value="Industrial Design">Industrial Design</option>
+                                                            <option value="Survey and Geo Informatics">Survey &amp; Geo Informatics</option>
+                                                            <option value="Urban and Rural Planning">Urban &amp; Rural Planning</option>
+                                                            <option value="Estate Management">Estate Management</option>
+                                                            <option value="Environmental Management">Environmental Management</option>
+                                                            <option value="Architecture">Architecture</option>
+                                                        </optgroup>
+                                                    </select>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </>
+                                )}
 
                                 <div className="mt-4 flex gap-3 justify-end border-t border-black-10 pt-4">
                                     <button type="button" onClick={() => setIsEditModalOpen(false)} className="btn-outline border-secondary text-secondary px-6">
@@ -315,11 +376,11 @@ export default function UsersManager({ initialUsers }: { initialUsers: User[] })
                                 Are you sure you want to completely delete <strong>{userToDelete.firstName} {userToDelete.lastName}</strong>? This action cannot be undone.
                             </p>
 
-                            <div className="flex gap-3 justify-center w-full">
-                                <button type="button" onClick={() => setIsDeleteModalOpen(false)} className="btn-outline border-black-10 text-secondary px-6 w-full flex-1">
+                            <div className="flex gap-3 justify-center w-full mt-4">
+                                <button type="button" onClick={() => setIsDeleteModalOpen(false)} className="btn-outline w-full modal-btn">
                                     Cancel
                                 </button>
-                                <button type="button" onClick={confirmDelete} disabled={loadingMap[userToDelete.id + '_del']} className="bg-error hover:bg-error/90 text-white rounded-lg px-6 w-full flex-1 font-semibold transition-colors">
+                                <button type="button" onClick={confirmDelete} disabled={loadingMap[userToDelete.id + '_del']} className="btn-danger w-full modal-btn">
                                     {loadingMap[userToDelete.id + '_del'] ? 'Deleting...' : 'Yes, Delete'}
                                 </button>
                             </div>
